@@ -5,6 +5,8 @@ import java.util.UUID
 
 import com.fasterxml.jackson.annotation.{JsonSubTypes, JsonTypeInfo}
 
+import scala.pickling.directSubclasses
+
 
 case class Domain(name: String,
                   primary: Boolean)
@@ -19,7 +21,11 @@ case class MetaTag(name: String,
   new JsonSubTypes.Type(value = classOf[DomainEntryPoint], name = "DomainEntryPoint"),
   new JsonSubTypes.Type(value = classOf[FreeEntryPoint], name = "FreeEntryPoint")
 ))
-abstract class EntryPoint {
+@directSubclasses(Array(
+  classOf[DomainEntryPoint],
+  classOf[FreeEntryPoint]
+))
+sealed trait EntryPoint {
   def lookupKey: String
 
   def primary: Boolean
@@ -40,7 +46,12 @@ final case class FreeEntryPoint(userName: String, siteName: String, primary: Boo
   new JsonSubTypes.Type(value = classOf[ButtonComponentData], name = "ButtonComponentData"),
   new JsonSubTypes.Type(value = classOf[BlogComponentData], name = "BlogComponentData")
 ))
-abstract class PageComponentData
+@directSubclasses(Array(
+  classOf[TextComponentData],
+  classOf[ButtonComponentData],
+  classOf[BlogComponentData]
+))
+sealed trait PageComponentData
 
 final case class TextComponentData(text: String) extends PageComponentData
 
