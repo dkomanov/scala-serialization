@@ -7,7 +7,8 @@ object Converters {
     "ScalaPB" -> ScalaPbConverter,
     "Java PB" -> JavaPbConverter,
     "Serializable" -> JavaSerializationConverter,
-    "Pickles" -> PicklingConverter
+    "Pickles" -> PicklingConverter,
+    "Boopickle" -> BoopickleConverter
   )
 
 }
