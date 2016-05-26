@@ -8,7 +8,8 @@ object Converters {
     "Java PB" -> JavaPbConverter,
     "Serializable" -> JavaSerializationConverter,
     "Pickles" -> PicklingConverter,
-    "Boopickle" -> BoopickleConverter
+    "Boopickle" -> BoopickleConverter,
+    "Chill" -> ChillConverter
   )
 
 }

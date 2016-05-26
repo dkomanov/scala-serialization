@@ -17,6 +17,7 @@ class SerializationTest extends Specification {
   doTest("Serializable", JavaSerializationConverter)
   doTest("Pickles", PicklingConverter)
   doTest("Boopickle", BoopickleConverter)
+  doTest("Chill", ChillConverter)
 
   "ScalaPB and Java Protobuf" should {
     Fragments.foreach(TestData.all) { case (name, site) =>
