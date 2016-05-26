@@ -7,6 +7,7 @@ import com.komanov.serialization.domain.protos.Site._
 
 import scala.collection.JavaConversions._
 
+/** https://developers.google.com/protocol-buffers */
 object JavaPbConverter extends SiteConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {

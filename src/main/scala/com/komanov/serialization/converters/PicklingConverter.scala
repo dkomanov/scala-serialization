@@ -8,6 +8,7 @@ import scala.pickling._
 import scala.pickling.binary._
 import scala.pickling.static._
 
+/** https://github.com/scala/pickling */
 object PicklingConverter extends SiteConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {

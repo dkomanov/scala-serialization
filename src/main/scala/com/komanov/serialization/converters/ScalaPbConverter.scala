@@ -5,6 +5,7 @@ import com.komanov.serialization.domain.protos.site.EntryPointPb.{DomainEntryPoi
 import com.komanov.serialization.domain.protos.site.PageComponentDataPb._
 import com.komanov.serialization.domain.protos.site._
 
+/** https://github.com/trueaccord/ScalaPB */
 object ScalaPbConverter extends SiteConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {

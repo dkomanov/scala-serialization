@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.module.{SimpleDeserializers, SimpleSeriali
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.komanov.serialization.domain.Site
 
+/** https://github.com/FasterXML/jackson */
 object JsonConverter extends SiteConverter {
 
   private object InstantModule extends Module {

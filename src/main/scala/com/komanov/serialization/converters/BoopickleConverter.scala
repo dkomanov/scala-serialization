@@ -6,6 +6,7 @@ import java.time.Instant
 import boopickle.Default._
 import com.komanov.serialization.domain._
 
+/** https://github.com/ochrons/boopickle */
 object BoopickleConverter extends SiteConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
