@@ -14,6 +14,8 @@ class SerializationTest extends Specification {
   doTest("JSON", JsonConverter)
   doTest("ScalaPB", ScalaPbConverter)
   doTest("Java Protobuf", JavaPbConverter)
+  doTest("Java Thrift", JavaThriftConverter)
+  doTest("Scrooge", ScroogeConverter)
   doTest("Serializable", JavaSerializationConverter)
   doTest("Pickles", PicklingConverter)
   doTest("Boopickle", BoopickleConverter)
@@ -24,6 +26,16 @@ class SerializationTest extends Specification {
       s"be interoperable for site of $name" in new ctx {
         val javaMessage = JavaPbConverter.toByteArray(site)
         val scalaMessage = ScalaPbConverter.toByteArray(site)
+        toHexDump(javaMessage) must be_===(toHexDump(scalaMessage))
+      }
+    }
+  }
+
+  "Scrooge and Java Thrift" should {
+    Fragments.foreach(TestData.all) { case (name, site) =>
+      s"be interoperable for site of $name" in new ctx {
+        val javaMessage = JavaThriftConverter.toByteArray(site)
+        val scalaMessage = ScroogeConverter.toByteArray(site)
         toHexDump(javaMessage) must be_===(toHexDump(scalaMessage))
       }
     }

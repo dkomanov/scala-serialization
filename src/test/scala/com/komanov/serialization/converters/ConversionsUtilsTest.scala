@@ -15,6 +15,10 @@ class ConversionsUtilsTest extends Specification {
       ConversionUtils.bytesToUuid(ConversionUtils.uuidToBytes(null)) must beNull
       ConversionUtils.bytesToUuid(ConversionUtils.uuidToBytes(zero)) must be_===(zero)
       ConversionUtils.bytesToUuid(ConversionUtils.uuidToBytes(rnd)) must be_===(rnd)
+
+      ConversionUtils.bytesToUuid(ConversionUtils.uuidToByteBuffer(null)) must beNull
+      ConversionUtils.bytesToUuid(ConversionUtils.uuidToByteBuffer(zero)) must be_===(zero)
+      ConversionUtils.bytesToUuid(ConversionUtils.uuidToByteBuffer(rnd)) must be_===(rnd)
     }
   }
 
