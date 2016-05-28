@@ -96,6 +96,16 @@
             <artifactId>scrooge-core_2.11</artifactId>
             <version>4.7.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-core</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.protostuff</groupId>
+            <artifactId>protostuff-runtime</artifactId>
+            <version>1.4.0</version>
+        </dependency>
     </dependencies>
 
     <repositories>
