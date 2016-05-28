@@ -7,6 +7,7 @@ import scala.pickling.Defaults._
 import scala.pickling._
 import scala.pickling.binary._
 import scala.pickling.static._
+import scala.pickling.shareNothing._
 
 /** https://github.com/scala/pickling */
 object PicklingConverter extends SiteConverter {
