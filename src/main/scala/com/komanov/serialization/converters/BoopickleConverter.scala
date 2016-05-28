@@ -2,6 +2,7 @@ package com.komanov.serialization.converters
 
 import java.nio.ByteBuffer
 import java.time.Instant
+import java.util
 
 import boopickle.Default._
 import com.komanov.serialization.domain._
@@ -10,7 +11,8 @@ import com.komanov.serialization.domain._
 object BoopickleConverter extends SiteConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
-    Pickle.intoBytes(site).array()
+    val bb = Pickle.intoBytes(site)
+    util.Arrays.copyOfRange(bb.array(), 0, bb.limit())
   }
 
   override def fromByteArray(bytes: Array[Byte]): Site = {
