@@ -2,8 +2,11 @@ package com.komanov.serialization.converters
 
 import java.time.Instant
 import java.util.UUID
+import java.util.UUID.randomUUID
 
 import com.komanov.serialization.domain._
+
+import scala.util.Random
 
 object TestData {
 
@@ -11,15 +14,15 @@ object TestData {
   val zeroGuid = new UUID(0, 0)
 
   val site1k = Site(
-    UUID.fromString("cafedead-1a9c-4be0-92ef-7da630bb0010"),
-    UUID.fromString("cafebabe-1a9c-4be0-92ef-7da630bb0001"),
-    20160524L,
+    randomUUID,
+    randomUUID,
+    1L,
     SiteType.Flash,
     Seq(SiteFlag.Free),
     "some-site-name",
-    "This is a long long description about this site, maybe something important here, maybe not.\n" +
-      "Ещё давайте добавим немного русского языка, чтобы не только английский был.\n" +
-      "And a little bit English, just to add some bytes to output.",
+    "Conveying or northward offending admitting perfectly my. Colonel gravity get thought fat.\n" +
+      "Interested especially do impression he unpleasant travelling excellence. All few our knew.\n" +
+      "Эхо высотах лун уме рек утоляют горящие Дум зрю Что. Сон змей смел дум Тем кущ Чуть неба лес.",
     Nil,
     Seq(MetaTag("og:image", "http://example.org/title.png")),
     Seq(
@@ -29,7 +32,7 @@ object TestData {
         Nil,
         Seq(
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0011"),
+            randomUUID,
             PageComponentType.Text,
             TextComponentData("Title"),
             None,
@@ -48,28 +51,26 @@ object TestData {
   )
 
   val site2k = Site(
-    UUID.fromString("cafedead-1a9c-4be0-92ef-7da630bb0020"),
-    UUID.fromString("cafebabe-1a9c-4be0-92ef-7da630bb0002"),
-    20160523L,
+    randomUUID,
+    randomUUID,
+    2L,
     SiteType.Silverlight,
     Seq(SiteFlag.Premium),
     "another-site-name",
-    "This is a long long description about this site, maybe something important here, maybe not.\n" +
-      "Ещё давайте добавим немного русского языка, чтобы не только английский был.\n" +
-      "And a little bit English, just to add some bytes to output.\n" +
-      "This is a long long description about this site, maybe something important here, maybe not.\n" +
-      "Ещё давайте добавим немного русского языка, чтобы не только английский был.\n" +
-      "And a little bit English, just to add some bytes to output.",
+    "Conveying or northward offending admitting perfectly my. Colonel gravity get thought fat smiling add but.\n" +
+      "Wonder twenty hunted and put income set desire expect. Am cottage calling my is mistake cousins talking up.\n" +
+      "Interested especially do impression he unpleasant travelling excellence. All few our knew time done draw ask.\n" +
+      "Эхо высотах лун уме рек утоляют горящие Дум зрю Что. Сон змей смел дум Тем кущ Чуть неба лес. Увы сын нам это Бог Рук кем Оне. Вы Он мя Ко.\n" +
+      "Кто Се то гл во. Тиран скрою мглой. Себе ведя соты пищи роды нему.",
     Seq(
       Domain("example.com", primary = true),
       Domain("example.org", primary = false)
     ),
     Seq(
-      MetaTag("og:image", "http://example.org/title.png"),
-      MetaTag("og:image1", "http://example.org/title1.png"),
-      MetaTag("og:image2", "http://example.org/title2.png"),
-      MetaTag("og:image3", "http://example.org/title3.png"),
-      MetaTag("og:image4", "http://example.org/title4.png")
+      MetaTag("og:image", "https://yastatic.net/morda-logo/i/share-logo-ru.png"),
+      MetaTag("og:locale", "ru-RU"),
+      MetaTag("og:url", "http://example.org"),
+      MetaTag("og:description", "Описание-е")
     ),
     Seq(
       Page(
@@ -78,17 +79,17 @@ object TestData {
         Nil,
         Seq(
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0021"),
+            randomUUID,
             PageComponentType.Text,
-            TextComponentData("Another Title"),
+            TextComponentData("Yet Another Title"),
             None,
             baseDate.plusSeconds(86401),
             baseDate.plusSeconds(86402)
           ),
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0022"),
+            randomUUID,
             PageComponentType.Button,
-            ButtonComponentData("click_btn", "Click Me!", UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0023")),
+            ButtonComponentData("click_btn", "Click Me!", randomUUID),
             Some(PageComponentPosition(1, 1)),
             baseDate.plusSeconds(86401),
             baseDate.plusSeconds(86402)
@@ -107,32 +108,27 @@ object TestData {
   )
 
   val site4k = Site(
-    UUID.fromString("cafedead-1a9c-4be0-92ef-7da630bb0030"),
-    UUID.fromString("cafebabe-1a9c-4be0-92ef-7da630bb0003"),
-    20160523L,
+    randomUUID,
+    randomUUID,
+    3L,
     SiteType.Silverlight,
     Seq(SiteFlag.Premium),
     "another-site-name-2",
-    "This is a long long description about this site, maybe something important here, maybe not.\n" +
-      "Ещё давайте добавим немного русского языка, чтобы не только английский был.\n" +
-      "And a little bit English, just to add some bytes to output.\n" +
-      "This is a long long description about this site, maybe something important here, maybe not.\n" +
-      "Ещё давайте добавим немного русского языка, чтобы не только английский был.\n" +
-      "This is a long long description about this site, maybe something important here, maybe not.\n" +
-      "Ещё давайте добавим немного русского языка, чтобы не только английский был.\n" +
-      "And a little bit English, just to add some bytes to output.",
+    "Conveying or northward offending admitting perfectly my. Colonel gravity get thought fat smiling add but.\n" +
+      "Wonder twenty hunted and put income set desire expect. Am cottage calling my is mistake cousins talking up.\n" +
+      "Interested especially do impression he unpleasant travelling excellence. All few our knew time done draw ask.\n" +
+      "Эхо высотах лун уме рек утоляют горящие Дум зрю Что. Сон змей смел дум Тем кущ Чуть неба лес. Увы сын нам это Бог Рук кем Оне. Вы Он мя Ко.\n" +
+      "Его нас для Сый вер. Ее да От Се их. Орион ничто Благо. Еще Оне сих тем. Угнетало ко гл но Аз Не величьем возлюблю.\n" +
+      "Кто Се то гл во. Тиран скрою мглой. Себе ведя соты пищи роды нему.",
     Seq(
-      Domain("example4k.com", primary = true),
-      Domain("example4k.org", primary = false)
+      Domain("example.com", primary = true),
+      Domain("example.org", primary = false)
     ),
     Seq(
-      MetaTag("og:image", "http://example4k.org/title.png"),
-      MetaTag("og:image1", "http://example4k.org/title1.png"),
-      MetaTag("og:image2", "http://example4k.org/title2.png"),
-      MetaTag("og:image3", "http://example4k.org/title3.png"),
-      MetaTag("og:image4", "http://example4k.org/title4.png"),
-      MetaTag("og:title", "Title for Facebook"),
-      MetaTag("og:description", "Description for Facebook")
+      MetaTag("og:image", "https://yastatic.net/morda-logo/i/share-logo-ru.png"),
+      MetaTag("og:locale", "ru-RU"),
+      MetaTag("og:url", "http://example.org"),
+      MetaTag("og:description", "Описание-е")
     ),
     Seq(
       Page(
@@ -141,7 +137,7 @@ object TestData {
         Nil,
         Seq(
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0031"),
+            randomUUID,
             PageComponentType.Text,
             TextComponentData("Another Title"),
             None,
@@ -149,9 +145,9 @@ object TestData {
             baseDate.plusSeconds(86402)
           ),
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0032"),
+            randomUUID,
             PageComponentType.Button,
-            ButtonComponentData("click_btn", "Click Me!", UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0033")),
+            ButtonComponentData("click_btn", "Click Me!", randomUUID),
             Some(PageComponentPosition(1, 1)),
             baseDate.plusSeconds(86401),
             baseDate.plusSeconds(86402)
@@ -166,7 +162,7 @@ object TestData {
         ),
         Seq(
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0034"),
+            randomUUID,
             PageComponentType.Text,
             TextComponentData("My blog!"),
             None,
@@ -174,7 +170,7 @@ object TestData {
             baseDate.plusSeconds(86402)
           ),
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0035"),
+            randomUUID,
             PageComponentType.Blog,
             BlogComponentData("BLOG", rss = true, tags = true),
             None,
@@ -182,7 +178,7 @@ object TestData {
             baseDate.plusSeconds(86402)
           ),
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0036"),
+            randomUUID,
             PageComponentType.Text,
             TextComponentData("Some blog entry, a little bit text, a little bit not text."),
             Some(PageComponentPosition(0, 100)),
@@ -190,15 +186,15 @@ object TestData {
             baseDate.plusSeconds(1)
           ),
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0037"),
+            randomUUID,
             PageComponentType.Button,
-            ButtonComponentData("post_comment", "Comment!", UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0038")),
+            ButtonComponentData("post_comment", "Comment!", randomUUID),
             Some(PageComponentPosition(0, 0)),
             baseDate.plusSeconds(86401),
             baseDate.plusSeconds(86402)
           ),
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0039"),
+            randomUUID,
             PageComponentType.Text,
             TextComponentData("My blog!"),
             Some(PageComponentPosition(0, 100)),
@@ -206,9 +202,9 @@ object TestData {
             baseDate.plusSeconds(86402)
           ),
           PageComponent(
-            UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0029"),
+            randomUUID,
             PageComponentType.Button,
-            ButtonComponentData("post_comment", "Comment!", UUID.fromString("cafedead-1a9c-4be0-c0c0-7da630bb0038")),
+            ButtonComponentData("post_comment", "Comment!", randomUUID),
             Some(PageComponentPosition(0, 0)),
             baseDate.plusSeconds(86401),
             baseDate.plusSeconds(86402)
@@ -233,25 +229,25 @@ object TestData {
     siteType = SiteType.Html5,
     pages = site4k.pages ++ (0 to 7).map { index =>
       Page(
-        s"catalog$index",
+        s"ct$index",
         s"/ct/$index",
         Nil,
         Seq(
           PageComponent(
-            UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}031"),
+            randomUUID,
             PageComponentType.Text,
-            TextComponentData(s"Catalog $index"),
+            TextComponentData(s"Cat $index"),
             None,
-            baseDate.plusSeconds(86501),
-            baseDate.plusSeconds(86502)
+            randomInstant,
+            randomInstant
           ),
           PageComponent(
-            UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}032"),
+            randomUUID,
             PageComponentType.Button,
-            ButtonComponentData("click", "Order", UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}033")),
-            Some(PageComponentPosition(1, 1)),
-            baseDate.plusSeconds(86601),
-            baseDate.plusSeconds(86602)
+            ButtonComponentData(s"bb${index}_clk", "Buy $index", randomUUID),
+            None,
+            randomInstant,
+            randomInstant
           )
         )
       )
@@ -263,48 +259,48 @@ object TestData {
     pages = site4k.pages ++ (10 to 49).map { index =>
       Page(
         s"catalog$index",
-        s"/product/catalog/$index",
+        s"/product$index/catalog/$index",
         (0 to 9).map(tagIndex => MetaTag(s"name$tagIndex", s"value-of-a-tag-$tagIndex")),
         Seq(
           PageComponent(
-            UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}31"),
+            randomUUID,
             PageComponentType.Text,
             TextComponentData(s"Product catalog title $index"),
             None,
-            baseDate.plusSeconds(86501),
-            baseDate.plusSeconds(86502)
+            randomInstant,
+            randomInstant
           ),
           PageComponent(
-            UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}32"),
+            randomUUID,
             PageComponentType.Button,
-            ButtonComponentData("click", "Order", UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}33")),
+            ButtonComponentData("click", "Another Order $index", randomUUID),
             Some(PageComponentPosition(100, 500)),
-            baseDate.plusSeconds(86601),
-            baseDate.plusSeconds(86602)
+            randomInstant,
+            randomInstant
           ),
           PageComponent(
-            UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}34"),
+            randomUUID,
             PageComponentType.Text,
-            TextComponentData(s"Product catalog title $index"),
+            TextComponentData(s"Yet${index}another${index}title$index"),
             None,
-            baseDate.plusSeconds(86501),
-            baseDate.plusSeconds(86502)
+            randomInstant,
+            randomInstant
           ),
           PageComponent(
-            UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}035"),
+            randomUUID,
             PageComponentType.Button,
-            ButtonComponentData("click", "Order", UUID.fromString(s"cafedead-1a9c-4be0-c0c0-7da630bb${index}36")),
+            ButtonComponentData("click", "Order$index", randomUUID),
             Some(PageComponentPosition(100, 1000)),
-            baseDate.plusSeconds(86601),
-            baseDate.plusSeconds(86602)
+            randomInstant,
+            randomInstant
           )
         )
       )
     },
     entryPoints = site4k.entryPoints ++ (0 to 19).map { index =>
-      DomainEntryPoint(s"mirror$index.example.org", primary = false)
+      DomainEntryPoint(s"mirror-$index.example.org", primary = false)
     },
-    defaultMetaTags = (1 to 20).map { index =>
+    defaultMetaTags = (1 to 5).map { index =>
       MetaTag(s"og:special-tag-$index", s"our special value $index")
     }
   )
@@ -316,5 +312,7 @@ object TestData {
     "8k" -> site8k,
     "64k" -> site64k
   )
+
+  private def randomInstant = baseDate.plusSeconds(100000000 + Random.nextInt(900000000))
 
 }
