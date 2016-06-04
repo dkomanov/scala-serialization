@@ -313,6 +313,10 @@ object TestData {
     "64k" -> site64k
   )
 
+  val events: Seq[(String, Seq[SiteEventData])] = all.map {
+    case (name, site) => name -> EventProcessor.unapply(site)
+  }
+
   private def randomInstant = baseDate.plusSeconds(100000000 + Random.nextInt(900000000))
 
 }

@@ -6,11 +6,11 @@ import com.komanov.serialization.domain._
 import scala.pickling.Defaults._
 import scala.pickling._
 import scala.pickling.binary._
-import scala.pickling.static._
 import scala.pickling.shareNothing._
+import scala.pickling.static._
 
 /** https://github.com/scala/pickling */
-object PicklingConverter extends SiteConverter {
+object PicklingConverter extends SiteConverter with EventConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
     site.pickle.value
@@ -18,6 +18,14 @@ object PicklingConverter extends SiteConverter {
 
   override def fromByteArray(bytes: Array[Byte]): Site = {
     bytes.unpickle[Site]
+  }
+
+  override def toByteArray(event: SiteEventData): Array[Byte] = {
+    event.pickle.value
+  }
+
+  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+    bytes.unpickle[SiteEventData]
   }
 
   private implicit val pageComponentTypePickler = new JavaEnumPickler[PageComponentType]
@@ -37,4 +45,8 @@ object PicklingConverter extends SiteConverter {
   private implicit val freeEntryPointPickler = PicklerUnpickler.generate[FreeEntryPoint]
   private implicit val entryPointPickler = PicklerUnpickler.generate[EntryPoint]
   private implicit val sitePickler = PicklerUnpickler.generate[Site]
+
+  private implicit val siteEventPickler = PicklerUnpickler.generate[SiteEvent]
+  private implicit val siteEventDataPickler = PicklerUnpickler.generate[SiteEventData]
+
 }

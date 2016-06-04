@@ -14,4 +14,8 @@ object Converters {
     "Chill" -> ChillConverter
   )
 
+  val events: Seq[(String, EventConverter)] = list.collect {
+    case (name, converter: EventConverter) => name -> converter
+  }
+
 }
