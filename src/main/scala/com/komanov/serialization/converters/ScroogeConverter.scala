@@ -5,6 +5,8 @@ import com.komanov.serialization.domain.thriftscala._
 import com.twitter.scrooge._
 import org.apache.thrift.protocol.TBinaryProtocol
 
+import scala.reflect.ClassTag
+
 /** https://twitter.github.io/scrooge/ */
 object ScroogeConverter extends MyConverter {
 
@@ -58,42 +60,19 @@ object ScroogeConverter extends MyConverter {
     )
   }
 
+  override def toByteArray(event: SiteEvent): Array[Byte] = {
+    val (codec, generator, _) = eventMap(event.getClass)
+    val proto = generator(event)
+
+    val transport = new TArrayByteTransport
+    codec.asInstanceOf[ThriftStructCodec[ThriftStruct]].encode(proto, new TBinaryProtocol(transport))
+    transport.toByteArray
+  }
+
   override def toByteArray(event: SiteEventData): Array[Byte] = {
-    val se = SiteEventPb()
     val proto = SiteEventDataPb(
       Some(ConversionUtils.uuidToByteBuffer(event.id)),
-      Some(event.event match {
-        case e: SiteCreated =>
-          se.copy(siteCreatedPb = Some(SiteCreatedPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(ConversionUtils.uuidToByteBuffer(e.ownerId)), Some(toSiteTypePb(e.siteType)))))
-        case e: SiteNameSet => se.copy(siteNameSetPb = Some(SiteNameSetPb(Some(e.name))))
-        case e: SiteDescriptionSet => se.copy(siteDescriptionSetPb = Some(SiteDescriptionSetPb(Some(e.description))))
-        case e: SiteRevisionSet => se.copy(siteRevisionSetPb = Some(SiteRevisionSetPb(Some(e.revision))))
-        case e: SitePublished => se.copy(sitePublishedPb = Some(SitePublishedPb()))
-        case e: SiteUnpublished => se.copy(siteUnpublishedPb = Some(SiteUnpublishedPb()))
-        case e: SiteFlagAdded => se.copy(siteFlagAddedPb = Some(SiteFlagAddedPb(Some(toSiteFlagPb(e.siteFlag)))))
-        case e: SiteFlagRemoved => se.copy(siteFlagRemovedPb = Some(SiteFlagRemovedPb(Some(toSiteFlagPb(e.siteFlag)))))
-        case e: DomainAdded => se.copy(domainAddedPb = Some(DomainAddedPb(Some(e.name))))
-        case e: DomainRemoved => se.copy(domainRemovedPb = Some(DomainRemovedPb(Some(e.name))))
-        case e: PrimaryDomainSet => se.copy(primaryDomainSetPb = Some(PrimaryDomainSetPb(Some(e.name))))
-        case e: DefaultMetaTagAdded => se.copy(defaultMetaTagAddedPb = Some(DefaultMetaTagAddedPb(Some(e.name), Some(e.value))))
-        case e: DefaultMetaTagRemoved => se.copy(defaultMetaTagRemovedPb = Some(DefaultMetaTagRemovedPb(Some(e.name))))
-        case e: PageAdded => se.copy(pageAddedPb = Some(PageAddedPb(Some(e.path))))
-        case e: PageRemoved => se.copy(pageRemovedPb = Some(PageRemovedPb(Some(e.path))))
-        case e: PageNameSet => se.copy(pageNameSetPb = Some(PageNameSetPb(Some(e.path), Some(e.name))))
-        case e: PageMetaTagAdded => se.copy(pageMetaTagAddedPb = Some(PageMetaTagAddedPb(Some(e.path), Some(e.name), Some(e.value))))
-        case e: PageMetaTagRemoved => se.copy(pageMetaTagRemovedPb = Some(PageMetaTagRemovedPb(Some(e.path), Some(e.name))))
-        case e: PageComponentAdded => se.copy(pageComponentAddedPb = Some(PageComponentAddedPb(Some(e.pagePath), Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(toPageComponentTypePb(e.componentType)))))
-        case e: PageComponentRemoved => se.copy(pageComponentRemovedPb = Some(PageComponentRemovedPb(Some(e.pagePath), Some(ConversionUtils.uuidToByteBuffer(e.id)))))
-        case e: PageComponentPositionSet => se.copy(pageComponentPositionSetPb = Some(PageComponentPositionSetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(e.position.x), Some(e.position.y))))
-        case e: PageComponentPositionReset => se.copy(pageComponentPositionResetPb = Some(PageComponentPositionResetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)))))
-        case e: TextComponentDataSet => se.copy(textComponentDataSetPb = Some(TextComponentDataSetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(e.text))))
-        case e: ButtonComponentDataSet => se.copy(buttonComponentDataSetPb = Some(ButtonComponentDataSetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(e.name), Some(e.text), Some(ConversionUtils.uuidToByteBuffer(e.action)))))
-        case e: BlogComponentDataSet => se.copy(blogComponentDataSetPb = Some(BlogComponentDataSetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(e.name), Some(e.rss), Some(e.tags))))
-        case e: DomainEntryPointAdded => se.copy(domainEntryPointAddedPb = Some(DomainEntryPointAddedPb(Some(e.domain))))
-        case e: FreeEntryPointAdded => se.copy(freeEntryPointAddedPb = Some(FreeEntryPointAddedPb(Some(e.userName), Some(e.siteName))))
-        case e: EntryPointRemoved => se.copy(entryPointRemovedPb = Some(EntryPointRemovedPb(Some(e.lookupKey))))
-        case e: PrimaryEntryPointSet => se.copy(primaryEntryPointSetPb = Some(PrimaryEntryPointSetPb(Some(e.lookupKey))))
-      }),
+      Some(toEventPb(event.event)),
       Some(ConversionUtils.instantToLong(event.timestamp))
     )
 
@@ -240,5 +219,51 @@ object ScroogeConverter extends MyConverter {
     case PageComponentTypePb.Button => PageComponentType.Button
     case PageComponentTypePb.Blog => PageComponentType.Blog
     case PageComponentTypePb.UnknownPageComponentType | PageComponentTypePb.EnumUnknownPageComponentTypePb(_) => PageComponentType.Unknown
+  }
+
+  type GeneratorType = SiteEvent => ThriftStruct
+  type SetterType = Option[ThriftStruct] => SiteEventPb
+
+  private def createEventMapTuple[T: ClassTag, M](codec: ThriftStructCodec[_],
+                                                  generator: T => M,
+                                                  setter: Option[M] => SiteEventPb): (Class[_], (ThriftStructCodec[ThriftStruct], GeneratorType, SetterType)) = {
+    (implicitly[ClassTag[T]].runtimeClass, (codec.asInstanceOf[ThriftStructCodec[ThriftStruct]], generator.asInstanceOf[GeneratorType], setter.asInstanceOf[SetterType]))
+  }
+
+  private val eventMap = Map[Class[_], (ThriftStructCodec[ThriftStruct], GeneratorType, SetterType)](
+    createEventMapTuple[SiteCreated, SiteCreatedPb](SiteCreatedPb, e => SiteCreatedPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(ConversionUtils.uuidToByteBuffer(e.ownerId)), Some(toSiteTypePb(e.siteType))), m => SiteEventPb(siteCreatedPb = m)),
+    createEventMapTuple[SiteNameSet, SiteNameSetPb](SiteNameSetPb, e => SiteNameSetPb(Some(e.name)), m => SiteEventPb(siteNameSetPb = m)),
+    createEventMapTuple[SiteDescriptionSet, SiteDescriptionSetPb](SiteDescriptionSetPb, e => SiteDescriptionSetPb(Some(e.description)), m => SiteEventPb(siteDescriptionSetPb = m)),
+    createEventMapTuple[SiteRevisionSet, SiteRevisionSetPb](SiteRevisionSetPb, e => SiteRevisionSetPb(Some(e.revision)), m => SiteEventPb(siteRevisionSetPb = m)),
+    createEventMapTuple[SitePublished, SitePublishedPb](SitePublishedPb, e => SitePublishedPb(), m => SiteEventPb(sitePublishedPb = m)),
+    createEventMapTuple[SiteUnpublished, SiteUnpublishedPb](SiteUnpublishedPb, e => SiteUnpublishedPb(), m => SiteEventPb(siteUnpublishedPb = m)),
+    createEventMapTuple[SiteFlagAdded, SiteFlagAddedPb](SiteFlagAddedPb, e => SiteFlagAddedPb(Some(toSiteFlagPb(e.siteFlag))), m => SiteEventPb(siteFlagAddedPb = m)),
+    createEventMapTuple[SiteFlagRemoved, SiteFlagRemovedPb](SiteFlagRemovedPb, e => SiteFlagRemovedPb(Some(toSiteFlagPb(e.siteFlag))), m => SiteEventPb(siteFlagRemovedPb = m)),
+    createEventMapTuple[DomainAdded, DomainAddedPb](DomainAddedPb, e => DomainAddedPb(Some(e.name)), m => SiteEventPb(domainAddedPb = m)),
+    createEventMapTuple[DomainRemoved, DomainRemovedPb](DomainRemovedPb, e => DomainRemovedPb(Some(e.name)), m => SiteEventPb(domainRemovedPb = m)),
+    createEventMapTuple[PrimaryDomainSet, PrimaryDomainSetPb](PrimaryDomainSetPb, e => PrimaryDomainSetPb(Some(e.name)), m => SiteEventPb(primaryDomainSetPb = m)),
+    createEventMapTuple[DefaultMetaTagAdded, DefaultMetaTagAddedPb](DefaultMetaTagAddedPb, e => DefaultMetaTagAddedPb(Some(e.name), Some(e.value)), m => SiteEventPb(defaultMetaTagAddedPb = m)),
+    createEventMapTuple[DefaultMetaTagRemoved, DefaultMetaTagRemovedPb](DefaultMetaTagRemovedPb, e => DefaultMetaTagRemovedPb(Some(e.name)), m => SiteEventPb(defaultMetaTagRemovedPb = m)),
+    createEventMapTuple[PageAdded, PageAddedPb](PageAddedPb, e => PageAddedPb(Some(e.path)), m => SiteEventPb(pageAddedPb = m)),
+    createEventMapTuple[PageRemoved, PageRemovedPb](PageRemovedPb, e => PageRemovedPb(Some(e.path)), m => SiteEventPb(pageRemovedPb = m)),
+    createEventMapTuple[PageNameSet, PageNameSetPb](PageNameSetPb, e => PageNameSetPb(Some(e.path), Some(e.name)), m => SiteEventPb(pageNameSetPb = m)),
+    createEventMapTuple[PageMetaTagAdded, PageMetaTagAddedPb](PageMetaTagAddedPb, e => PageMetaTagAddedPb(Some(e.path), Some(e.name), Some(e.value)), m => SiteEventPb(pageMetaTagAddedPb = m)),
+    createEventMapTuple[PageMetaTagRemoved, PageMetaTagRemovedPb](PageMetaTagRemovedPb, e => PageMetaTagRemovedPb(Some(e.path), Some(e.name)), m => SiteEventPb(pageMetaTagRemovedPb = m)),
+    createEventMapTuple[PageComponentAdded, PageComponentAddedPb](PageComponentAddedPb, e => PageComponentAddedPb(Some(e.pagePath), Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(toPageComponentTypePb(e.componentType))), m => SiteEventPb(pageComponentAddedPb = m)),
+    createEventMapTuple[PageComponentRemoved, PageComponentRemovedPb](PageComponentRemovedPb, e => PageComponentRemovedPb(Some(e.pagePath), Some(ConversionUtils.uuidToByteBuffer(e.id))), m => SiteEventPb(pageComponentRemovedPb = m)),
+    createEventMapTuple[PageComponentPositionSet, PageComponentPositionSetPb](PageComponentPositionSetPb, e => PageComponentPositionSetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(e.position.x), Some(e.position.y)), m => SiteEventPb(pageComponentPositionSetPb = m)),
+    createEventMapTuple[PageComponentPositionReset, PageComponentPositionResetPb](PageComponentPositionResetPb, e => PageComponentPositionResetPb(Some(ConversionUtils.uuidToByteBuffer(e.id))), m => SiteEventPb(pageComponentPositionResetPb = m)),
+    createEventMapTuple[TextComponentDataSet, TextComponentDataSetPb](TextComponentDataSetPb, e => TextComponentDataSetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(e.text)), m => SiteEventPb(textComponentDataSetPb = m)),
+    createEventMapTuple[ButtonComponentDataSet, ButtonComponentDataSetPb](ButtonComponentDataSetPb, e => ButtonComponentDataSetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(e.name), Some(e.text), Some(ConversionUtils.uuidToByteBuffer(e.action))), m => SiteEventPb(buttonComponentDataSetPb = m)),
+    createEventMapTuple[BlogComponentDataSet, BlogComponentDataSetPb](BlogComponentDataSetPb, e => BlogComponentDataSetPb(Some(ConversionUtils.uuidToByteBuffer(e.id)), Some(e.name), Some(e.rss), Some(e.tags)), m => SiteEventPb(blogComponentDataSetPb = m)),
+    createEventMapTuple[DomainEntryPointAdded, DomainEntryPointAddedPb](DomainEntryPointAddedPb, e => DomainEntryPointAddedPb(Some(e.domain)), m => SiteEventPb(domainEntryPointAddedPb = m)),
+    createEventMapTuple[FreeEntryPointAdded, FreeEntryPointAddedPb](FreeEntryPointAddedPb, e => FreeEntryPointAddedPb(Some(e.userName), Some(e.siteName)), m => SiteEventPb(freeEntryPointAddedPb = m)),
+    createEventMapTuple[EntryPointRemoved, EntryPointRemovedPb](EntryPointRemovedPb, e => EntryPointRemovedPb(Some(e.lookupKey)), m => SiteEventPb(entryPointRemovedPb = m)),
+    createEventMapTuple[PrimaryEntryPointSet, PrimaryEntryPointSetPb](PrimaryEntryPointSetPb, e => PrimaryEntryPointSetPb(Some(e.lookupKey)), m => SiteEventPb(primaryEntryPointSetPb = m))
+  )
+
+  private def toEventPb(event: SiteEvent): SiteEventPb = {
+    val (_, generator, setter) = eventMap(event.getClass)
+    setter(Some(generator(event)))
   }
 }

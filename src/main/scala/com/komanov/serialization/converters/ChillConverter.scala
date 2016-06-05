@@ -1,6 +1,6 @@
 package com.komanov.serialization.converters
 
-import com.komanov.serialization.domain.{Site, SiteEventData}
+import com.komanov.serialization.domain.{Site, SiteEvent, SiteEventData}
 import com.twitter.chill.ScalaKryoInstantiator
 
 /** https://github.com/twitter/chill */
@@ -14,6 +14,10 @@ object ChillConverter extends MyConverter {
 
   override def fromByteArray(bytes: Array[Byte]): Site = {
     pool.fromBytes(bytes, classOf[Site])
+  }
+
+  override def toByteArray(event: SiteEvent): Array[Byte] = {
+    pool.toBytesWithoutClass(event)
   }
 
   override def toByteArray(event: SiteEventData): Array[Byte] = {

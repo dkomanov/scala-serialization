@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.Module.SetupContext
 import com.fasterxml.jackson.databind._
 import com.fasterxml.jackson.databind.module.{SimpleDeserializers, SimpleSerializers}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.komanov.serialization.domain.{Site, SiteEventData}
+import com.komanov.serialization.domain.{Site, SiteEvent, SiteEventData}
 
 /** https://github.com/FasterXML/jackson */
 object JsonConverter extends MyConverter {
@@ -52,6 +52,10 @@ object JsonConverter extends MyConverter {
 
   override def fromByteArray(bytes: Array[Byte]): Site = {
     siteReader.readValue(bytes)
+  }
+
+  override def toByteArray(event: SiteEvent): Array[Byte] = {
+    objectMapper.writeValueAsBytes(event)
   }
 
   override def toByteArray(event: SiteEventData): Array[Byte] = {

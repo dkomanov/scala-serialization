@@ -20,6 +20,10 @@ object PicklingConverter extends MyConverter {
     bytes.unpickle[Site]
   }
 
+  override def toByteArray(event: SiteEvent): Array[Byte] = {
+    event.pickle.value
+  }
+
   override def toByteArray(event: SiteEventData): Array[Byte] = {
     event.pickle.value
   }
@@ -48,5 +52,4 @@ object PicklingConverter extends MyConverter {
 
   private implicit val siteEventPickler = PicklerUnpickler.generate[SiteEvent]
   private implicit val siteEventDataPickler = PicklerUnpickler.generate[SiteEventData]
-
 }

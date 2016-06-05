@@ -3,7 +3,7 @@ package com.komanov.serialization.converters
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, ObjectOutputStream}
 
 import com.komanov.serialization.converters.IoUtils.using
-import com.komanov.serialization.domain.{Site, SiteEventData}
+import com.komanov.serialization.domain.{Site, SiteEvent, SiteEventData}
 
 object JavaSerializationConverter extends MyConverter {
 
@@ -21,6 +21,16 @@ object JavaSerializationConverter extends MyConverter {
     using(new ByteArrayInputStream(bytes)) { bais =>
       using(new ObjectInputStream(bais)) { os =>
         os.readObject().asInstanceOf[Site]
+      }
+    }
+  }
+
+  override def toByteArray(event: SiteEvent): Array[Byte] = {
+    using(new ByteArrayOutputStream()) { baos =>
+      using(new ObjectOutputStream(baos)) { os =>
+        os.writeObject(event)
+        os.flush()
+        baos.toByteArray
       }
     }
   }
