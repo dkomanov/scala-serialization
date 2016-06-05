@@ -6,9 +6,10 @@ import java.util.UUID
 object EventProcessor {
   
   private val nullInstant = Instant.ofEpochMilli(0)
+  private val nullSite = Site(null, null, 0, null, Nil, null, null, Nil, Nil, Nil, Nil, published = false, nullInstant, nullInstant)
 
   def apply(list: Seq[SiteEventData]): Site = {
-    list.foldLeft(Site(null, null, 0, null, Nil, null, null, Nil, Nil, Nil, Nil, published = false, nullInstant, nullInstant)) {
+    list.foldLeft(nullSite) {
       case (s, SiteEventData(_, SiteCreated(id, ownerId, siteType), dateCreated)) =>
         s.copy(id = id, ownerId = ownerId, siteType = siteType, dateCreated = dateCreated)
 
