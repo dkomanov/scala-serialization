@@ -8,7 +8,7 @@ import org.apache.thrift.{TDeserializer, TSerializer}
 import scala.collection.JavaConversions._
 
 /** https://thrift.apache.org/ */
-object JavaThriftConverter extends SiteConverter with EventConverter {
+object JavaThriftConverter extends MyConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
     val proto = new SitePb()

@@ -10,7 +10,7 @@ import com.komanov.serialization.domain.protos.Site._
 import scala.collection.JavaConversions._
 
 /** https://developers.google.com/protocol-buffers */
-object JavaPbConverter extends SiteConverter with EventConverter {
+object JavaPbConverter extends MyConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
     val proto = SitePb.newBuilder()

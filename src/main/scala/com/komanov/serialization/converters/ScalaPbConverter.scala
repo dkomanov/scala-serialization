@@ -8,7 +8,7 @@ import com.komanov.serialization.domain.protos.site.PageComponentDataPb._
 import com.komanov.serialization.domain.protos.site._
 
 /** https://github.com/trueaccord/ScalaPB */
-object ScalaPbConverter extends SiteConverter with EventConverter {
+object ScalaPbConverter extends MyConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
     val proto = SitePb(

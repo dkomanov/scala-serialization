@@ -6,7 +6,7 @@ import com.twitter.scrooge._
 import org.apache.thrift.protocol.TBinaryProtocol
 
 /** https://twitter.github.io/scrooge/ */
-object ScroogeConverter extends SiteConverter with EventConverter {
+object ScroogeConverter extends MyConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
     val proto = new SitePb.Immutable(

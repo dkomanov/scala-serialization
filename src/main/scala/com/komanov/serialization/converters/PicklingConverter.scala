@@ -10,7 +10,7 @@ import scala.pickling.shareNothing._
 import scala.pickling.static._
 
 /** https://github.com/scala/pickling */
-object PicklingConverter extends SiteConverter with EventConverter {
+object PicklingConverter extends MyConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
     site.pickle.value

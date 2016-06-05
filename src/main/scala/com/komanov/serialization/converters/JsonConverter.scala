@@ -10,7 +10,7 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.komanov.serialization.domain.{Site, SiteEventData}
 
 /** https://github.com/FasterXML/jackson */
-object JsonConverter extends SiteConverter with EventConverter {
+object JsonConverter extends MyConverter {
 
   private object InstantModule extends Module {
     override def getModuleName: String = "Instant"

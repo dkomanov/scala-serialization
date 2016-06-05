@@ -5,7 +5,7 @@ import java.io.{ByteArrayInputStream, ByteArrayOutputStream, ObjectInputStream, 
 import com.komanov.serialization.converters.IoUtils.using
 import com.komanov.serialization.domain.{Site, SiteEventData}
 
-object JavaSerializationConverter extends SiteConverter with EventConverter {
+object JavaSerializationConverter extends MyConverter {
 
   override def toByteArray(site: Site): Array[Byte] = {
     using(new ByteArrayOutputStream()) { baos =>
