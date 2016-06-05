@@ -33,7 +33,7 @@ class SerializationTest extends Specification {
   doEventTest("Chill", ChillConverter)
 
   "ScalaPB and Java Protobuf" should {
-    Fragments.foreach(TestData.all) { case (name, site) =>
+    Fragments.foreach(TestData.sites) { case (name, site) =>
       s"be interoperable for site of $name" in new ctx {
         val javaMessage = JavaPbConverter.toByteArray(site)
         val scalaMessage = ScalaPbConverter.toByteArray(site)
@@ -53,7 +53,7 @@ class SerializationTest extends Specification {
   }
 
   "Scrooge and Java Thrift" should {
-    Fragments.foreach(TestData.all) { case (name, site) =>
+    Fragments.foreach(TestData.sites) { case (name, site) =>
       s"be interoperable for site of $name" in new ctx {
         val javaMessage = JavaThriftConverter.toByteArray(site)
         val scalaMessage = ScroogeConverter.toByteArray(site)
@@ -82,7 +82,7 @@ class SerializationTest extends Specification {
 
   def doSiteTest(converterName: String, converter: SiteConverter) = {
     converterName should {
-      Fragments.foreach(TestData.all) { case (name, site) =>
+      Fragments.foreach(TestData.sites) { case (name, site) =>
         s"serialize-parse site of $name" in new ctx {
           val bytes = converter.toByteArray(site)
           println(s"$converterName ($name): ${bytes.length}")

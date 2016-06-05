@@ -41,7 +41,7 @@ object ReportGenerator extends App {
 
   for ((converterName, converter) <- Converters.list) {
     val results = Seq.newBuilder[(Int, Int)]
-    for ((name, site) <- TestData.all) {
+    for ((name, site) <- TestData.sites) {
       val bytes = converter.toByteArray(site)
       val gzipLen = getGzipByteLength(bytes)
 
@@ -66,7 +66,7 @@ object ReportGenerator extends App {
   printSizes(gzips.result())
 
   private def printHeaders: Any = {
-    println("Converter," + TestData.all.map(_._1).mkString(","))
+    println("Converter," + TestData.sites.map(_._1).mkString(","))
   }
 
   private def printSizes(all: Seq[(String, Seq[Int])]): Unit = {
