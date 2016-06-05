@@ -317,6 +317,11 @@ object TestData {
     case (name, site) => name -> EventProcessor.unapply(site)
   }
 
+  def all: Seq[(String, Site, Seq[SiteEventData])] = sites.zip(events).map {
+    case ((name, site), (_, eventList)) =>
+      (name, site, eventList)
+  }
+
   private def randomInstant = baseDate.plusSeconds(100000000 + Random.nextInt(900000000))
 
 }
