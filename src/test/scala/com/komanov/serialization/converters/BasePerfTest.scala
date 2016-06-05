@@ -18,7 +18,7 @@ trait BasePerfTest[Input, Output] {
 
     println("Converter," + TestData.sites.map(_._1).mkString(","))
 
-    for ((converterName, converter) <- Converters.list) {
+    for ((converterName, converter) <- Converters.all) {
       val results = for {
         (name, site) <- TestData.sites
         input = createInput(converter, site)
@@ -50,7 +50,7 @@ trait BasePerfTest[Input, Output] {
   private def doWarmUp() = {
     val x = N / 10
 
-    for ((converterName, c) <- Converters.list) {
+    for ((converterName, c) <- Converters.all) {
       print(s"$converterName... ")
       for (data <- TestData.sites) {
         val input = createInput(c, data._2)

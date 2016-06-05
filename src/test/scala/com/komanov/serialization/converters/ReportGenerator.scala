@@ -39,7 +39,7 @@ object ReportGenerator extends App {
 
   val (raws, gzips) = (Seq.newBuilder[(String, Seq[Int])], Seq.newBuilder[(String, Seq[Int])])
 
-  for ((converterName, converter) <- Converters.list) {
+  for ((converterName, converter) <- Converters.all) {
     val results = Seq.newBuilder[(Int, Int)]
     for ((name, site) <- TestData.sites) {
       val bytes = converter.toByteArray(site)
