@@ -80,7 +80,7 @@ object JavaThriftConverter extends MyConverter {
     serializer.serialize(proto)
   }
 
-  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
     val proto = new SiteEventDataPb()
     deserializer.deserialize(proto, bytes)
 

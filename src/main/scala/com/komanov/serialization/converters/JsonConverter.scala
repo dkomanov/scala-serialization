@@ -62,7 +62,7 @@ object JsonConverter extends MyConverter {
     objectMapper.writeValueAsBytes(event)
   }
 
-  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
     objectMapper.readValue(bytes, classOf[SiteEventData])
   }
 }

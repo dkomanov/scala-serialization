@@ -45,7 +45,7 @@ object JavaSerializationConverter extends MyConverter {
     }
   }
 
-  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
     using(new ByteArrayInputStream(bytes)) { bais =>
       using(new ObjectInputStream(bais)) { os =>
         os.readObject().asInstanceOf[SiteEventData]

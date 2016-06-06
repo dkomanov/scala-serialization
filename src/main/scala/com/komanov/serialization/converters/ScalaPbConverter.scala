@@ -84,7 +84,7 @@ object ScalaPbConverter extends MyConverter {
     proto.toByteArray
   }
 
-  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
     val event = SiteEventDataPb.parseFrom(bytes)
 
     SiteEventData(

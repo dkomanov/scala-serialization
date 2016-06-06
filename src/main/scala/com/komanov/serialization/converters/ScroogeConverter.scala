@@ -81,7 +81,7 @@ object ScroogeConverter extends MyConverter {
     transport.toByteArray
   }
 
-  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
     val transport = new TArrayByteTransport
     transport.setBytes(bytes)
     val event = SiteEventDataPb.decode(new TBinaryProtocol(transport))

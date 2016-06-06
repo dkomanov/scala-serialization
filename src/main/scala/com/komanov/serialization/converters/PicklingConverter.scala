@@ -28,7 +28,7 @@ object PicklingConverter extends MyConverter {
     event.pickle.value
   }
 
-  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
     bytes.unpickle[SiteEventData]
   }
 

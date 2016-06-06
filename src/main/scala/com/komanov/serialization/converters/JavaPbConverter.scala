@@ -85,7 +85,7 @@ object JavaPbConverter extends MyConverter {
       .toByteArray
   }
 
-  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
     val proto = SiteEventDataPb.parseFrom(bytes)
     val siteEvent: SiteEvent = proto.getEv.getEvCase match {
       case EvCase.SITECREATEDPB =>

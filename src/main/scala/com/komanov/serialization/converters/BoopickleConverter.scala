@@ -26,7 +26,7 @@ object BoopickleConverter extends MyConverter {
     bbToArray(Pickle.intoBytes(event))
   }
 
-  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
     Unpickle[SiteEventData].fromBytes(ByteBuffer.wrap(bytes))
   }
 

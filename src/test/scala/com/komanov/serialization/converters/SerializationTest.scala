@@ -99,7 +99,7 @@ class SerializationTest extends Specification {
         s"serialize-parse events of $name" in new ctx {
           for (event <- events) {
             val bytes = converter.toByteArray(event)
-            val parsed = converter.eventFromByteArray(bytes)
+            val parsed = converter.eventDataFromByteArray(bytes)
             parsed must be_===(event)
           }
         }

@@ -8,6 +8,6 @@ trait EventConverter {
 
   def toByteArray(event: SiteEventData): Array[Byte]
 
-  def eventFromByteArray(bytes: Array[Byte]): SiteEventData
+  def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData
 
 }
