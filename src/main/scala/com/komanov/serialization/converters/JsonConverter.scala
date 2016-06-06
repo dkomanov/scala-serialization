@@ -7,10 +7,10 @@ import com.fasterxml.jackson.databind.Module.SetupContext
 import com.fasterxml.jackson.databind._
 import com.fasterxml.jackson.databind.module.{SimpleDeserializers, SimpleSerializers}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import com.komanov.serialization.domain.Site
+import com.komanov.serialization.domain.{Site, SiteEvent, SiteEventData}
 
 /** https://github.com/FasterXML/jackson */
-object JsonConverter extends SiteConverter {
+object JsonConverter extends MyConverter {
 
   private object InstantModule extends Module {
     override def getModuleName: String = "Instant"
@@ -43,14 +43,26 @@ object JsonConverter extends SiteConverter {
     om.registerModule(InstantModule)
     om
   }
-  private val objectReader: ObjectReader = objectMapper.readerFor(classOf[Site])
-  private val objectWriter: ObjectWriter = objectMapper.writerFor(classOf[Site])
+  private val siteReader: ObjectReader = objectMapper.readerFor(classOf[Site])
+  private val siteWriter: ObjectWriter = objectMapper.writerFor(classOf[Site])
 
   override def toByteArray(site: Site): Array[Byte] = {
-    objectWriter.writeValueAsBytes(site)
+    siteWriter.writeValueAsBytes(site)
   }
 
   override def fromByteArray(bytes: Array[Byte]): Site = {
-    objectReader.readValue(bytes)
+    siteReader.readValue(bytes)
+  }
+
+  override def toByteArray(event: SiteEvent): Array[Byte] = {
+    objectMapper.writeValueAsBytes(event)
+  }
+
+  override def toByteArray(event: SiteEventData): Array[Byte] = {
+    objectMapper.writeValueAsBytes(event)
+  }
+
+  override def eventFromByteArray(bytes: Array[Byte]): SiteEventData = {
+    objectMapper.readValue(bytes, classOf[SiteEventData])
   }
 }

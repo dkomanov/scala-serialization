@@ -305,13 +305,22 @@ object TestData {
     }
   )
 
-  val all: Seq[(String, Site)] = Seq(
+  val sites: Seq[(String, Site)] = Seq(
     "1k" -> site1k,
     "2k" -> site2k,
     "4k" -> site4k,
     "8k" -> site8k,
     "64k" -> site64k
   )
+
+  val events: Seq[(String, Seq[SiteEventData])] = sites.map {
+    case (name, site) => name -> EventProcessor.unapply(site)
+  }
+
+  def all: Seq[(String, Site, Seq[SiteEventData])] = sites.zip(events).map {
+    case ((name, site), (_, eventList)) =>
+      (name, site, eventList)
+  }
 
   private def randomInstant = baseDate.plusSeconds(100000000 + Random.nextInt(900000000))
 
