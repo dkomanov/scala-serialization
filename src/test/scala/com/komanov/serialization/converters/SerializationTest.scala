@@ -79,7 +79,6 @@ class SerializationTest extends Specification {
       Fragments.foreach(TestData.sites) { case (name, site) =>
         s"serialize-parse site of $name" in new ctx {
           val bytes = converter.toByteArray(site)
-          println(s"$converterName ($name): ${bytes.length}")
           val parsed = converter.fromByteArray(bytes)
           parsed must be_===(site)
         }
