@@ -24,12 +24,8 @@ object PicklingConverter extends MyConverter {
     event.pickle.value
   }
 
-  override def toByteArray(event: SiteEventData): Array[Byte] = {
-    event.pickle.value
-  }
-
-  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
-    bytes.unpickle[SiteEventData]
+  override def siteEventFromByteArray(clazz: Class[_], bytes: Array[Byte]): SiteEvent = {
+    bytes.unpickle[SiteEvent]
   }
 
   private implicit val pageComponentTypePickler = new JavaEnumPickler[PageComponentType]

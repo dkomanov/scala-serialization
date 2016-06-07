@@ -35,21 +35,12 @@ object JavaSerializationConverter extends MyConverter {
     }
   }
 
-  override def toByteArray(event: SiteEventData): Array[Byte] = {
-    using(new ByteArrayOutputStream()) { baos =>
-      using(new ObjectOutputStream(baos)) { os =>
-        os.writeObject(event)
-        os.flush()
-        baos.toByteArray
+  override def siteEventFromByteArray(clazz: Class[_], bytes: Array[Byte]): SiteEvent = {
+    using(new ByteArrayInputStream(bytes)) { bais =>
+      using(new ObjectInputStream(bais)) { os =>
+        os.readObject().asInstanceOf[SiteEvent]
       }
     }
   }
 
-  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
-    using(new ByteArrayInputStream(bytes)) { bais =>
-      using(new ObjectInputStream(bais)) { os =>
-        os.readObject().asInstanceOf[SiteEventData]
-      }
-    }
-  }
 }

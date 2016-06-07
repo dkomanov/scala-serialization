@@ -2,13 +2,13 @@ package com.komanov.serialization.converters
 
 import com.google.protobuf.GeneratedMessage
 import com.komanov.serialization.domain._
-import com.komanov.serialization.domain.protos.Events.SiteEventPb.EvCase
 import com.komanov.serialization.domain.protos.Events._
 import com.komanov.serialization.domain.protos.Site.EntryPointPb._
 import com.komanov.serialization.domain.protos.Site.PageComponentDataPb._
 import com.komanov.serialization.domain.protos.Site._
 
 import scala.collection.JavaConversions._
+import scala.language.existentials
 import scala.reflect.ClassTag
 
 /** https://developers.google.com/protocol-buffers */
@@ -68,122 +68,15 @@ object JavaPbConverter extends MyConverter {
   }
 
   override def toByteArray(event: SiteEvent): Array[Byte] = {
-    eventMap(event.getClass)
-      ._1(event)
+    val BigTuple(_, generator, _, _) = eventMap(event.getClass)
+    generator(event)
       .build()
       .toByteArray
   }
 
-  override def toByteArray(event: SiteEventData): Array[Byte] = {
-    val evPb: SiteEventPb.Builder = toEventPb(event.event)
-
-    SiteEventDataPb.newBuilder()
-      .setId(ConversionUtils.uuidToBytes(event.id))
-      .setTimestamp(ConversionUtils.instantToLong(event.timestamp))
-      .setEv(evPb)
-      .build()
-      .toByteArray
-  }
-
-  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
-    val proto = SiteEventDataPb.parseFrom(bytes)
-    val siteEvent: SiteEvent = proto.getEv.getEvCase match {
-      case EvCase.SITECREATEDPB =>
-        val ev = proto.getEv.getSiteCreatedPb
-        SiteCreated(ConversionUtils.bytesToUuid(ev.getId), ConversionUtils.bytesToUuid(ev.getOwnerId), fromSiteTypePb(ev.getSiteType))
-      case EvCase.SITENAMESETPB =>
-        val ev = proto.getEv.getSiteNameSetPb
-        SiteNameSet(ev.getName)
-      case EvCase.SITEDESCRIPTIONSETPB =>
-        val ev = proto.getEv.getSiteDescriptionSetPb
-        SiteDescriptionSet(ev.getDescription)
-      case EvCase.SITEREVISIONSETPB =>
-        val ev = proto.getEv.getSiteRevisionSetPb
-        SiteRevisionSet(ev.getRevision)
-      case EvCase.SITEPUBLISHEDPB =>
-        val ev = proto.getEv.getSitePublishedPb
-        SitePublished()
-      case EvCase.SITEUNPUBLISHEDPB =>
-        val ev = proto.getEv.getSiteUnpublishedPb
-        SiteUnpublished()
-      case EvCase.SITEFLAGADDEDPB =>
-        val ev = proto.getEv.getSiteFlagAddedPb
-        SiteFlagAdded(fromSiteFlagPb(ev.getSiteFlag))
-      case EvCase.SITEFLAGREMOVEDPB =>
-        val ev = proto.getEv.getSiteFlagRemovedPb
-        SiteFlagRemoved(fromSiteFlagPb(ev.getSiteFlag))
-      case EvCase.DOMAINADDEDPB =>
-        val ev = proto.getEv.getDomainAddedPb
-        DomainAdded(ev.getName)
-      case EvCase.DOMAINREMOVEDPB =>
-        val ev = proto.getEv.getDomainRemovedPb
-        DomainRemoved(ev.getName)
-      case EvCase.PRIMARYDOMAINSETPB =>
-        val ev = proto.getEv.getPrimaryDomainSetPb
-        PrimaryDomainSet(ev.getName)
-      case EvCase.DEFAULTMETATAGADDEDPB =>
-        val ev = proto.getEv.getDefaultMetaTagAddedPb
-        DefaultMetaTagAdded(ev.getName, ev.getValue)
-      case EvCase.DEFAULTMETATAGREMOVEDPB =>
-        val ev = proto.getEv.getDefaultMetaTagRemovedPb
-        DefaultMetaTagRemoved(ev.getName)
-      case EvCase.PAGEADDEDPB =>
-        val ev = proto.getEv.getPageAddedPb
-        PageAdded(ev.getPath)
-      case EvCase.PAGEREMOVEDPB =>
-        val ev = proto.getEv.getPageRemovedPb
-        PageRemoved(ev.getPath)
-      case EvCase.PAGENAMESETPB =>
-        val ev = proto.getEv.getPageNameSetPb
-        PageNameSet(ev.getPath, ev.getName)
-      case EvCase.PAGEMETATAGADDEDPB =>
-        val ev = proto.getEv.getPageMetaTagAddedPb
-        PageMetaTagAdded(ev.getPath, ev.getName, ev.getValue)
-      case EvCase.PAGEMETATAGREMOVEDPB =>
-        val ev = proto.getEv.getPageMetaTagRemovedPb
-        PageMetaTagRemoved(ev.getPath, ev.getName)
-      case EvCase.PAGECOMPONENTADDEDPB =>
-        val ev = proto.getEv.getPageComponentAddedPb
-        PageComponentAdded(ev.getPagePath, ConversionUtils.bytesToUuid(ev.getId), fromPageComponentTypePb(ev.getComponentType))
-      case EvCase.PAGECOMPONENTREMOVEDPB =>
-        val ev = proto.getEv.getPageComponentRemovedPb
-        PageComponentRemoved(ev.getPagePath, ConversionUtils.bytesToUuid(ev.getId))
-      case EvCase.PAGECOMPONENTPOSITIONSETPB =>
-        val ev = proto.getEv.getPageComponentPositionSetPb
-        PageComponentPositionSet(ConversionUtils.bytesToUuid(ev.getId), PageComponentPosition(ev.getX, ev.getY))
-      case EvCase.PAGECOMPONENTPOSITIONRESETPB =>
-        val ev = proto.getEv.getPageComponentPositionResetPb
-        PageComponentPositionReset(ConversionUtils.bytesToUuid(ev.getId))
-      case EvCase.TEXTCOMPONENTDATASETPB =>
-        val ev = proto.getEv.getTextComponentDataSetPb
-        TextComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getText)
-      case EvCase.BUTTONCOMPONENTDATASETPB =>
-        val ev = proto.getEv.getButtonComponentDataSetPb
-        ButtonComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getName, ev.getText, ConversionUtils.bytesToUuid(ev.getAction))
-      case EvCase.BLOGCOMPONENTDATASETPB =>
-        val ev = proto.getEv.getBlogComponentDataSetPb
-        BlogComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getName, ev.getRss, ev.getTags)
-      case EvCase.DOMAINENTRYPOINTADDEDPB =>
-        val ev = proto.getEv.getDomainEntryPointAddedPb
-        DomainEntryPointAdded(ev.getDomain)
-      case EvCase.FREEENTRYPOINTADDEDPB =>
-        val ev = proto.getEv.getFreeEntryPointAddedPb
-        FreeEntryPointAdded(ev.getUserName, ev.getSiteName)
-      case EvCase.ENTRYPOINTREMOVEDPB =>
-        val ev = proto.getEv.getEntryPointRemovedPb
-        EntryPointRemoved(ev.getLookupKey)
-      case EvCase.PRIMARYENTRYPOINTSETPB =>
-        val ev = proto.getEv.getPrimaryEntryPointSetPb
-        PrimaryEntryPointSet(ev.getLookupKey)
-      case EvCase.EV_NOT_SET =>
-        throw new IllegalStateException("Unknown event type")
-    }
-
-    SiteEventData(
-      ConversionUtils.bytesToUuid(proto.getId),
-      siteEvent,
-      ConversionUtils.longToInstance(proto.getTimestamp)
-    )
+  override def siteEventFromByteArray(clazz: Class[_], bytes: Array[Byte]): SiteEvent = {
+    val BigTuple(_, _, extractor, parser) = eventMap(clazz)
+    extractor(parser(bytes))
   }
 
   private def toMetaTagPb(mt: MetaTag) = {
@@ -337,167 +230,200 @@ object JavaPbConverter extends MyConverter {
     case PageComponentTypePb.UnknownPageComponentType | PageComponentTypePb.UNRECOGNIZED => PageComponentType.Unknown
   }
 
-  type GeneratorType = SiteEvent => GeneratedMessage.Builder[_]
-  type SetterType = (SiteEventPb.Builder, GeneratedMessage.Builder[_]) => SiteEventPb.Builder
+  type ToMessageF = SiteEvent => GeneratedMessage.Builder[_]
+  type FromMessageF = GeneratedMessage => SiteEvent
+  type ParseF = Array[Byte] => GeneratedMessage
 
-  private def createEventMapTuple[T : ClassTag, M](generator: T => M,
-                                                   setter: (SiteEventPb.Builder, M) => SiteEventPb.Builder): (Class[_], (GeneratorType, SetterType)) = {
-    (implicitly[ClassTag[T]].runtimeClass, (generator.asInstanceOf[GeneratorType], setter.asInstanceOf[SetterType]))
+  case class BigTuple(siteEventClass: Class[_], generator: ToMessageF, extractor: FromMessageF, parser: ParseF)
+
+  private def createEventMapTuple[T: ClassTag, M, B](generator: T => B, extractor: M => T, parser: Array[Byte] => M): BigTuple = {
+    BigTuple(
+      implicitly[ClassTag[T]].runtimeClass,
+      generator.asInstanceOf[ToMessageF],
+      extractor.asInstanceOf[FromMessageF],
+      parser.asInstanceOf[ParseF]
+    )
   }
 
-  private val eventMap = Map[Class[_], (GeneratorType, SetterType)](
-    createEventMapTuple[SiteCreated, SiteCreatedPb.Builder](
+  private val eventHandlers = Seq[BigTuple](
+    createEventMapTuple[SiteCreated, SiteCreatedPb, SiteCreatedPb.Builder](
       e => SiteCreatedPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setOwnerId(ConversionUtils.uuidToBytes(e.ownerId))
         .setSiteType(toSiteTypePb(e.siteType)),
-      (b, m) => b.setSiteCreatedPb(m)
+      ev => SiteCreated(ConversionUtils.bytesToUuid(ev.getId), ConversionUtils.bytesToUuid(ev.getOwnerId), fromSiteTypePb(ev.getSiteType)),
+      SiteCreatedPb.parseFrom
     ),
-    createEventMapTuple[SiteNameSet, SiteNameSetPb.Builder](
+    createEventMapTuple[SiteNameSet, SiteNameSetPb, SiteNameSetPb.Builder](
       e => SiteNameSetPb.newBuilder().setName(e.name),
-      (b, m) => b.setSiteNameSetPb(m)
+      ev => SiteNameSet(ev.getName),
+      SiteNameSetPb.parseFrom
     ),
-    createEventMapTuple[SiteDescriptionSet, SiteDescriptionSetPb.Builder](
+    createEventMapTuple[SiteDescriptionSet, SiteDescriptionSetPb, SiteDescriptionSetPb.Builder](
       e => SiteDescriptionSetPb.newBuilder().setDescription(e.description),
-      (b, m) => b.setSiteDescriptionSetPb(m)
+      ev => SiteDescriptionSet(ev.getDescription),
+      SiteDescriptionSetPb.parseFrom
     ),
-    createEventMapTuple[SiteRevisionSet, SiteRevisionSetPb.Builder](
+    createEventMapTuple[SiteRevisionSet, SiteRevisionSetPb, SiteRevisionSetPb.Builder](
       e => SiteRevisionSetPb.newBuilder().setRevision(e.revision),
-      (b, m) => b.setSiteRevisionSetPb(m)
+      ev => SiteRevisionSet(ev.getRevision),
+      SiteRevisionSetPb.parseFrom
     ),
-    createEventMapTuple[SitePublished, SitePublishedPb.Builder](
+    createEventMapTuple[SitePublished, SitePublishedPb, SitePublishedPb.Builder](
       e => SitePublishedPb.newBuilder(),
-      (b, m) => b.setSitePublishedPb(m)
+      _ => SitePublished(),
+      SitePublishedPb.parseFrom
     ),
-    createEventMapTuple[SiteUnpublished, SiteUnpublishedPb.Builder](
+    createEventMapTuple[SiteUnpublished, SiteUnpublishedPb, SiteUnpublishedPb.Builder](
       e => SiteUnpublishedPb.newBuilder(),
-      (b, m) => b.setSiteUnpublishedPb(m)
+      _ => SiteUnpublished(),
+      SiteUnpublishedPb.parseFrom
     ),
-    createEventMapTuple[SiteFlagAdded, SiteFlagAddedPb.Builder](
+    createEventMapTuple[SiteFlagAdded, SiteFlagAddedPb, SiteFlagAddedPb.Builder](
       e => SiteFlagAddedPb.newBuilder().setSiteFlag(toSiteFlagPb(e.siteFlag)),
-      (b, m) => b.setSiteFlagAddedPb(m)
+      ev => SiteFlagAdded(fromSiteFlagPb(ev.getSiteFlag)),
+      SiteFlagAddedPb.parseFrom
     ),
-    createEventMapTuple[SiteFlagRemoved, SiteFlagRemovedPb.Builder](
+    createEventMapTuple[SiteFlagRemoved, SiteFlagRemovedPb, SiteFlagRemovedPb.Builder](
       e => SiteFlagRemovedPb.newBuilder().setSiteFlag(toSiteFlagPb(e.siteFlag)),
-      (b, m) => b.setSiteFlagRemovedPb(m)
+      ev => SiteFlagRemoved(fromSiteFlagPb(ev.getSiteFlag)),
+      SiteFlagRemovedPb.parseFrom
     ),
-    createEventMapTuple[DomainAdded, DomainAddedPb.Builder](
+    createEventMapTuple[DomainAdded, DomainAddedPb, DomainAddedPb.Builder](
       e => DomainAddedPb.newBuilder().setName(e.name),
-      (b, m) => b.setDomainAddedPb(m)
+      ev => DomainAdded(ev.getName),
+      DomainAddedPb.parseFrom
     ),
-    createEventMapTuple[DomainRemoved, DomainRemovedPb.Builder](
+    createEventMapTuple[DomainRemoved, DomainRemovedPb, DomainRemovedPb.Builder](
       e => DomainRemovedPb.newBuilder().setName(e.name),
-      (b, m) => b.setDomainRemovedPb(m)
+      ev => DomainRemoved(ev.getName),
+      DomainRemovedPb.parseFrom
     ),
-    createEventMapTuple[PrimaryDomainSet, PrimaryDomainSetPb.Builder](
+    createEventMapTuple[PrimaryDomainSet, PrimaryDomainSetPb, PrimaryDomainSetPb.Builder](
       e => PrimaryDomainSetPb.newBuilder().setName(e.name),
-      (b, m) => b.setPrimaryDomainSetPb(m)
+      ev => PrimaryDomainSet(ev.getName),
+      PrimaryDomainSetPb.parseFrom
     ),
-    createEventMapTuple[DefaultMetaTagAdded, DefaultMetaTagAddedPb.Builder](
+    createEventMapTuple[DefaultMetaTagAdded, DefaultMetaTagAddedPb, DefaultMetaTagAddedPb.Builder](
       e => DefaultMetaTagAddedPb.newBuilder()
         .setName(e.name)
         .setValue(e.value),
-      (b, m) => b.setDefaultMetaTagAddedPb(m)
+      ev => DefaultMetaTagAdded(ev.getName, ev.getValue),
+      DefaultMetaTagAddedPb.parseFrom
     ),
-    createEventMapTuple[DefaultMetaTagRemoved, DefaultMetaTagRemovedPb.Builder](
+    createEventMapTuple[DefaultMetaTagRemoved, DefaultMetaTagRemovedPb, DefaultMetaTagRemovedPb.Builder](
       e => DefaultMetaTagRemovedPb.newBuilder().setName(e.name),
-      (b, m) => b.setDefaultMetaTagRemovedPb(m)
+      ev => DefaultMetaTagRemoved(ev.getName),
+      DefaultMetaTagRemovedPb.parseFrom
     ),
-    createEventMapTuple[PageAdded, PageAddedPb.Builder](
+    createEventMapTuple[PageAdded, PageAddedPb, PageAddedPb.Builder](
       e => PageAddedPb.newBuilder().setPath(e.path),
-      (b, m) => b.setPageAddedPb(m)
+      ev => PageAdded(ev.getPath),
+      PageAddedPb.parseFrom
     ),
-    createEventMapTuple[PageRemoved, PageRemovedPb.Builder](
+    createEventMapTuple[PageRemoved, PageRemovedPb, PageRemovedPb.Builder](
       e => PageRemovedPb.newBuilder().setPath(e.path),
-      (b, m) => b.setPageRemovedPb(m)
+      ev => PageRemoved(ev.getPath),
+      PageRemovedPb.parseFrom
     ),
-    createEventMapTuple[PageNameSet, PageNameSetPb.Builder](
+    createEventMapTuple[PageNameSet, PageNameSetPb, PageNameSetPb.Builder](
       e => PageNameSetPb.newBuilder()
         .setPath(e.path)
         .setName(e.name),
-      (b, m) => b.setPageNameSetPb(m)
+      ev => PageNameSet(ev.getPath, ev.getName),
+      PageNameSetPb.parseFrom
     ),
-    createEventMapTuple[PageMetaTagAdded, PageMetaTagAddedPb.Builder](
+    createEventMapTuple[PageMetaTagAdded, PageMetaTagAddedPb, PageMetaTagAddedPb.Builder](
       e => PageMetaTagAddedPb.newBuilder()
         .setPath(e.path)
         .setName(e.name)
         .setValue(e.value),
-      (b, m) => b.setPageMetaTagAddedPb(m)
+      ev => PageMetaTagAdded(ev.getPath, ev.getName, ev.getValue),
+      PageMetaTagAddedPb.parseFrom
     ),
-    createEventMapTuple[PageMetaTagRemoved, PageMetaTagRemovedPb.Builder](
+    createEventMapTuple[PageMetaTagRemoved, PageMetaTagRemovedPb, PageMetaTagRemovedPb.Builder](
       e => PageMetaTagRemovedPb.newBuilder()
         .setPath(e.path)
         .setName(e.name),
-      (b, m) => b.setPageMetaTagRemovedPb(m)
+      ev => PageMetaTagRemoved(ev.getPath, ev.getName),
+      PageMetaTagRemovedPb.parseFrom
     ),
-    createEventMapTuple[PageComponentAdded, PageComponentAddedPb.Builder](
+    createEventMapTuple[PageComponentAdded, PageComponentAddedPb, PageComponentAddedPb.Builder](
       e => PageComponentAddedPb.newBuilder()
         .setPagePath(e.pagePath)
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setComponentType(toPageComponentTypePb(e.componentType)),
-      (b, m) => b.setPageComponentAddedPb(m)
+      ev => PageComponentAdded(ev.getPagePath, ConversionUtils.bytesToUuid(ev.getId), fromPageComponentTypePb(ev.getComponentType)),
+      PageComponentAddedPb.parseFrom
     ),
-    createEventMapTuple[PageComponentRemoved, PageComponentRemovedPb.Builder](
+    createEventMapTuple[PageComponentRemoved, PageComponentRemovedPb, PageComponentRemovedPb.Builder](
       e => PageComponentRemovedPb.newBuilder()
         .setPagePath(e.pagePath)
         .setId(ConversionUtils.uuidToBytes(e.id)),
-      (b, m) => b.setPageComponentRemovedPb(m)
+      ev => PageComponentRemoved(ev.getPagePath, ConversionUtils.bytesToUuid(ev.getId)),
+      PageComponentRemovedPb.parseFrom
     ),
-    createEventMapTuple[PageComponentPositionSet, PageComponentPositionSetPb.Builder](
+    createEventMapTuple[PageComponentPositionSet, PageComponentPositionSetPb, PageComponentPositionSetPb.Builder](
       e => PageComponentPositionSetPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setX(e.position.x)
         .setY(e.position.y),
-      (b, m) => b.setPageComponentPositionSetPb(m)
+      ev => PageComponentPositionSet(ConversionUtils.bytesToUuid(ev.getId), PageComponentPosition(ev.getX, ev.getY)),
+      PageComponentPositionSetPb.parseFrom
     ),
-    createEventMapTuple[PageComponentPositionReset, PageComponentPositionResetPb.Builder](
+    createEventMapTuple[PageComponentPositionReset, PageComponentPositionResetPb, PageComponentPositionResetPb.Builder](
       e => PageComponentPositionResetPb.newBuilder().setId(ConversionUtils.uuidToBytes(e.id)),
-      (b, m) => b.setPageComponentPositionResetPb(m)
+      ev => PageComponentPositionReset(ConversionUtils.bytesToUuid(ev.getId)),
+      PageComponentPositionResetPb.parseFrom
     ),
-    createEventMapTuple[TextComponentDataSet, TextComponentDataSetPb.Builder](
+    createEventMapTuple[TextComponentDataSet, TextComponentDataSetPb, TextComponentDataSetPb.Builder](
       e => TextComponentDataSetPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setText(e.text),
-      (b, m) => b.setTextComponentDataSetPb(m)
+      ev => TextComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getText),
+      TextComponentDataSetPb.parseFrom
     ),
-    createEventMapTuple[ButtonComponentDataSet, ButtonComponentDataSetPb.Builder](
+    createEventMapTuple[ButtonComponentDataSet, ButtonComponentDataSetPb, ButtonComponentDataSetPb.Builder](
       e => ButtonComponentDataSetPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setName(e.name)
         .setText(e.text)
         .setAction(ConversionUtils.uuidToBytes(e.action)),
-      (b, m) => b.setButtonComponentDataSetPb(m)
+      ev => ButtonComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getName, ev.getText, ConversionUtils.bytesToUuid(ev.getAction)),
+      ButtonComponentDataSetPb.parseFrom
     ),
-    createEventMapTuple[BlogComponentDataSet, BlogComponentDataSetPb.Builder](
+    createEventMapTuple[BlogComponentDataSet, BlogComponentDataSetPb, BlogComponentDataSetPb.Builder](
       e => BlogComponentDataSetPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setName(e.name)
         .setRss(e.rss)
         .setTags(e.tags),
-      (b, m) => b.setBlogComponentDataSetPb(m)
+      ev => BlogComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getName, ev.getRss, ev.getTags),
+      BlogComponentDataSetPb.parseFrom
     ),
-    createEventMapTuple[DomainEntryPointAdded, DomainEntryPointAddedPb.Builder](
+    createEventMapTuple[DomainEntryPointAdded, DomainEntryPointAddedPb, DomainEntryPointAddedPb.Builder](
       e => DomainEntryPointAddedPb.newBuilder().setDomain(e.domain),
-      (b, m) => b.setDomainEntryPointAddedPb(m)
+      ev => DomainEntryPointAdded(ev.getDomain),
+      DomainEntryPointAddedPb.parseFrom
     ),
-    createEventMapTuple[FreeEntryPointAdded, FreeEntryPointAddedPb.Builder](
+    createEventMapTuple[FreeEntryPointAdded, FreeEntryPointAddedPb, FreeEntryPointAddedPb.Builder](
       e => FreeEntryPointAddedPb.newBuilder()
         .setUserName(e.userName)
         .setSiteName(e.siteName),
-      (b, m) => b.setFreeEntryPointAddedPb(m)
+      ev => FreeEntryPointAdded(ev.getUserName, ev.getSiteName),
+      FreeEntryPointAddedPb.parseFrom
     ),
-    createEventMapTuple[EntryPointRemoved, EntryPointRemovedPb.Builder](
+    createEventMapTuple[EntryPointRemoved, EntryPointRemovedPb, EntryPointRemovedPb.Builder](
       e => EntryPointRemovedPb.newBuilder().setLookupKey(e.lookupKey),
-      (b, m) => b.setEntryPointRemovedPb(m)
+      ev => EntryPointRemoved(ev.getLookupKey),
+      EntryPointRemovedPb.parseFrom
     ),
-    createEventMapTuple[PrimaryEntryPointSet, PrimaryEntryPointSetPb.Builder](
+    createEventMapTuple[PrimaryEntryPointSet, PrimaryEntryPointSetPb, PrimaryEntryPointSetPb.Builder](
       e => PrimaryEntryPointSetPb.newBuilder().setLookupKey(e.lookupKey),
-      (b, m) => b.setPrimaryEntryPointSetPb(m)
+      ev => PrimaryEntryPointSet(ev.getLookupKey),
+      PrimaryEntryPointSetPb.parseFrom
     )
   )
 
-  private def toEventPb(event: SiteEvent): SiteEventPb.Builder = {
-    val (generator, setter) = eventMap(event.getClass)
-    setter(SiteEventPb.newBuilder(), generator(event))
-  }
+  private val eventMap: Map[Class[_], BigTuple] = Map(eventHandlers.map(t => t.siteEventClass -> t): _*)
 }

@@ -12,25 +12,15 @@ class SerializationTest extends Specification {
 
   sequential
 
-  doSiteTest("JSON", JsonConverter)
-  doSiteTest("ScalaPB", ScalaPbConverter)
-  doSiteTest("Java Protobuf", JavaPbConverter)
-  doSiteTest("Java Thrift", JavaThriftConverter)
-  doSiteTest("Scrooge", ScroogeConverter)
-  doSiteTest("Serializable", JavaSerializationConverter)
-  doSiteTest("Pickles", PicklingConverter)
-  doSiteTest("Boopickle", BoopickleConverter)
-  doSiteTest("Chill", ChillConverter)
-
-  doEventTest("JSON", JsonConverter)
-  doEventTest("ScalaPB", ScalaPbConverter)
-  doEventTest("Java Protobuf", JavaPbConverter)
-  doEventTest("Java Thrift", JavaThriftConverter)
-  doEventTest("Scrooge", ScroogeConverter)
-  doEventTest("Serializable", JavaSerializationConverter)
-  doEventTest("Pickles", PicklingConverter)
-  doEventTest("Boopickle", BoopickleConverter)
-  doEventTest("Chill", ChillConverter)
+  doTest("JSON", JsonConverter)
+  doTest("ScalaPB", ScalaPbConverter)
+  doTest("Java Protobuf", JavaPbConverter)
+  doTest("Java Thrift", JavaThriftConverter)
+  doTest("Scrooge", ScroogeConverter)
+  doTest("Serializable", JavaSerializationConverter)
+  doTest("Pickles", PicklingConverter)
+  doTest("Boopickle", BoopickleConverter)
+  doTest("Chill", ChillConverter)
 
   "ScalaPB and Java Protobuf" should {
     Fragments.foreach(TestData.sites) { case (name, site) =>
@@ -43,7 +33,7 @@ class SerializationTest extends Specification {
 
     Fragments.foreach(TestData.events) { case (name, events) =>
       s"be interoperable events of $name" in new ctx {
-        for (event <- events) {
+        for (SiteEventData(_, event, _) <- events) {
           val javaMessage = JavaPbConverter.toByteArray(event)
           val scalaMessage = ScalaPbConverter.toByteArray(event)
           toHexDump(javaMessage) must be_===(toHexDump(scalaMessage))
@@ -63,7 +53,7 @@ class SerializationTest extends Specification {
 
     Fragments.foreach(TestData.events) { case (name, events) =>
       s"be interoperable events of $name" in new ctx {
-        for (event <- events) {
+        for (SiteEventData(_, event, _) <- events) {
           val javaMessage = JavaThriftConverter.toByteArray(event)
           val scalaMessage = ScroogeConverter.toByteArray(event)
           toHexDump(javaMessage) must be_===(toHexDump(scalaMessage))
@@ -75,12 +65,16 @@ class SerializationTest extends Specification {
   class ctx extends Scope
 
   def toHexDump(arr: Array[Byte]): String = {
-    val baos = new ByteArrayOutputStream
-    HexDump.dump(arr, 0, baos, 0)
-    new String(baos.toByteArray)
+    if (arr.isEmpty) {
+      ""
+    } else {
+      val baos = new ByteArrayOutputStream
+      HexDump.dump(arr, 0, baos, 0)
+      new String(baos.toByteArray)
+    }
   }
 
-  def doSiteTest(converterName: String, converter: SiteConverter) = {
+  def doTest(converterName: String, converter: MyConverter) = {
     converterName should {
       Fragments.foreach(TestData.sites) { case (name, site) =>
         s"serialize-parse site of $name" in new ctx {
@@ -90,16 +84,12 @@ class SerializationTest extends Specification {
           parsed must be_===(site)
         }
       }
-    }
-  }
 
-  def doEventTest(converterName: String, converter: EventConverter) = {
-    converterName should {
       Fragments.foreach(TestData.events) { case (name, events) =>
-        s"serialize-parse events of $name" in new ctx {
-          for (event <- events) {
+        s"serialize-parse site events of $name" in new ctx {
+          for (SiteEventData(_, event, _) <- events) {
             val bytes = converter.toByteArray(event)
-            val parsed = converter.eventDataFromByteArray(bytes)
+            val parsed = converter.siteEventFromByteArray(event.getClass, bytes)
             parsed must be_===(event)
           }
         }

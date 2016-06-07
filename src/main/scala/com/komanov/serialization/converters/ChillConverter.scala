@@ -20,11 +20,8 @@ object ChillConverter extends MyConverter {
     pool.toBytesWithoutClass(event)
   }
 
-  override def toByteArray(event: SiteEventData): Array[Byte] = {
-    pool.toBytesWithoutClass(event)
+  override def siteEventFromByteArray(clazz: Class[_], bytes: Array[Byte]): SiteEvent = {
+    pool.fromBytes(bytes, clazz).asInstanceOf[SiteEvent]
   }
 
-  override def eventDataFromByteArray(bytes: Array[Byte]): SiteEventData = {
-    pool.fromBytes(bytes, classOf[SiteEventData])
-  }
 }
