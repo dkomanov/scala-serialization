@@ -1,14 +1,14 @@
 package com.komanov.serialization.converters
 
-import com.komanov.serialization.domain.Site
+import com.komanov.serialization.domain.{EventProcessor, Site, SiteEvent}
 
 trait BasePerfTest[Input, Output] {
 
   val N = 100000
 
-  def createInput(converter: SiteConverter, site: Site): Input
+  def createInput(converter: MyConverter, site: Site): Input
 
-  def convert(converter: SiteConverter, input: Input): Output
+  def convert(converter: MyConverter, input: Input): Output
 
   def doTest(): Unit = {
     println("Warming up...")
@@ -28,7 +28,7 @@ trait BasePerfTest[Input, Output] {
     }
   }
 
-  private def doTest(c: SiteConverter, input: Input): (Long, Long) = {
+  private def doTest(c: MyConverter, input: Input): (Long, Long) = {
     Runtime.getRuntime.gc()
     Runtime.getRuntime.runFinalization()
     Runtime.getRuntime.gc()
@@ -41,7 +41,7 @@ trait BasePerfTest[Input, Output] {
     duration -> avg
   }
 
-  private def runXTimes(c: SiteConverter, input: Input, x: Int): Unit = {
+  private def runXTimes(c: MyConverter, input: Input, x: Int): Unit = {
     for (_ <- 0 until x) {
       convert(c, input)
     }
@@ -74,10 +74,10 @@ Pickles,53991,83601,220440,589888,4162785
 Boopickle,5451,10628,17533,29765,225717
 Chill,7202,9783,15130,27338,207871
  */
-object SerializationPerfTestApp extends App with BasePerfTest[Site, Array[Byte]] {
-  override def createInput(converter: SiteConverter, site: Site): Site = site
+object SiteSerializationPerfTestApp extends App with BasePerfTest[Site, Array[Byte]] {
+  override def createInput(converter: MyConverter, site: Site): Site = site
 
-  override def convert(converter: SiteConverter, input: Site): Array[Byte] = converter.toByteArray(input)
+  override def convert(converter: MyConverter, input: Site): Array[Byte] = converter.toByteArray(input)
 
   doTest()
 }
@@ -94,10 +94,62 @@ Pickles,40337,63840,165109,446043,3201348
 Boopickle,2848,5017,8454,15962,97270
 Chill,6675,9654,14770,25261,193136
  */
-object DeserializationPerfTestApp extends App with BasePerfTest[Array[Byte], Site] {
-  override def createInput(converter: SiteConverter, site: Site): Array[Byte] = converter.toByteArray(site)
+object SiteDeserializationPerfTestApp extends App with BasePerfTest[Array[Byte], Site] {
+  override def createInput(converter: MyConverter, site: Site): Array[Byte] = converter.toByteArray(site)
 
-  override def convert(converter: SiteConverter, input: Array[Byte]): Site = converter.fromByteArray(input)
+  override def convert(converter: MyConverter, input: Array[Byte]): Site = converter.fromByteArray(input)
+
+  doTest()
+}
+
+/*
+Converter,1k,2k,4k,8k,64k
+JSON,9192,17366,34574,76571,701055
+ScalaPB,2194,4542,8618,17011,170413
+Java PB,3110,6390,11922,25144,283493
+Java Thrift,4357,9180,17560,37924,405784
+Scrooge,4842,10226,19922,42428,423060
+Serializable,16957,31195,68399,160541,1492595
+Pickles,47793,83754,236829,648561,4936980
+Boopickle,16867,32278,62663,135614,1379687
+Chill,3704,7098,15025,33376,326856
+ */
+object EventsSerializationPerfTestApp extends App with BasePerfTest[Seq[SiteEvent], Unit] {
+  override def createInput(converter: MyConverter, site: Site): Seq[SiteEvent] = {
+    EventProcessor.unapply(site).map(_.event)
+  }
+
+  override def convert(converter: MyConverter, input: Seq[SiteEvent]): Unit = {
+    for (e <- input) {
+      converter.toByteArray(e)
+    }
+  }
+
+  doTest()
+}
+
+/*
+Converter,1k,2k,4k,8k,64k
+JSON,12125,23012,45171,98008,880806
+ScalaPB,3394,6644,12681,26589,251012
+Java PB,2690,5550,10564,20359,214071
+Java Thrift,3556,6974,13436,29135,281339
+Scrooge,3911,7678,15867,33832,331989
+Serializable,78081,138535,323729,774177,6725015
+Pickles,34623,61638,169895,462075,3522794
+Boopickle,4828,9941,18158,38296,389896
+Chill,4770,9203,18638,38146,382506
+ */
+object EventsDeserializationPerfTestApp extends App with BasePerfTest[Seq[(Class[_], Array[Byte])], Unit] {
+  override def createInput(converter: MyConverter, site: Site): Seq[(Class[_], Array[Byte])] = {
+    EventProcessor.unapply(site).map(_.event).map(e => e.getClass -> converter.toByteArray(e))
+  }
+
+  override def convert(converter: MyConverter, input: Seq[(Class[_], Array[Byte])]): Unit = {
+    for ((clazz, bytes) <- input) {
+      converter.siteEventFromByteArray(clazz, bytes)
+    }
+  }
 
   doTest()
 }
