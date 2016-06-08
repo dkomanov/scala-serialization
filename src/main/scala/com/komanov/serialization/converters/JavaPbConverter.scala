@@ -68,15 +68,15 @@ object JavaPbConverter extends MyConverter {
   }
 
   override def toByteArray(event: SiteEvent): Array[Byte] = {
-    val BigTuple(_, generator, _, _) = eventMap(event.getClass)
-    generator(event)
+    val EventDescriptor(_, toMessage, _, _) = descriptorMap(event.getClass)
+    toMessage(event)
       .build()
       .toByteArray
   }
 
   override def siteEventFromByteArray(clazz: Class[_], bytes: Array[Byte]): SiteEvent = {
-    val BigTuple(_, _, extractor, parser) = eventMap(clazz)
-    extractor(parser(bytes))
+    val EventDescriptor(_, _, fromMessage, parser) = descriptorMap(clazz)
+    fromMessage(parser(bytes))
   }
 
   private def toMetaTagPb(mt: MetaTag) = {
@@ -234,10 +234,10 @@ object JavaPbConverter extends MyConverter {
   type FromMessageF = GeneratedMessage => SiteEvent
   type ParseF = Array[Byte] => GeneratedMessage
 
-  case class BigTuple(siteEventClass: Class[_], generator: ToMessageF, extractor: FromMessageF, parser: ParseF)
+  case class EventDescriptor(siteEventClass: Class[_], generator: ToMessageF, extractor: FromMessageF, parser: ParseF)
 
-  private def createEventMapTuple[T: ClassTag, M, B](generator: T => B, extractor: M => T, parser: Array[Byte] => M): BigTuple = {
-    BigTuple(
+  private def createEventDescriptor[T: ClassTag, M, B](generator: T => B, extractor: M => T, parser: Array[Byte] => M): EventDescriptor = {
+    EventDescriptor(
       implicitly[ClassTag[T]].runtimeClass,
       generator.asInstanceOf[ToMessageF],
       extractor.asInstanceOf[FromMessageF],
@@ -245,8 +245,8 @@ object JavaPbConverter extends MyConverter {
     )
   }
 
-  private val eventHandlers = Seq[BigTuple](
-    createEventMapTuple[SiteCreated, SiteCreatedPb, SiteCreatedPb.Builder](
+  private val eventHandlers = Seq[EventDescriptor](
+    createEventDescriptor[SiteCreated, SiteCreatedPb, SiteCreatedPb.Builder](
       e => SiteCreatedPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setOwnerId(ConversionUtils.uuidToBytes(e.ownerId))
@@ -254,86 +254,86 @@ object JavaPbConverter extends MyConverter {
       ev => SiteCreated(ConversionUtils.bytesToUuid(ev.getId), ConversionUtils.bytesToUuid(ev.getOwnerId), fromSiteTypePb(ev.getSiteType)),
       SiteCreatedPb.parseFrom
     ),
-    createEventMapTuple[SiteNameSet, SiteNameSetPb, SiteNameSetPb.Builder](
+    createEventDescriptor[SiteNameSet, SiteNameSetPb, SiteNameSetPb.Builder](
       e => SiteNameSetPb.newBuilder().setName(e.name),
       ev => SiteNameSet(ev.getName),
       SiteNameSetPb.parseFrom
     ),
-    createEventMapTuple[SiteDescriptionSet, SiteDescriptionSetPb, SiteDescriptionSetPb.Builder](
+    createEventDescriptor[SiteDescriptionSet, SiteDescriptionSetPb, SiteDescriptionSetPb.Builder](
       e => SiteDescriptionSetPb.newBuilder().setDescription(e.description),
       ev => SiteDescriptionSet(ev.getDescription),
       SiteDescriptionSetPb.parseFrom
     ),
-    createEventMapTuple[SiteRevisionSet, SiteRevisionSetPb, SiteRevisionSetPb.Builder](
+    createEventDescriptor[SiteRevisionSet, SiteRevisionSetPb, SiteRevisionSetPb.Builder](
       e => SiteRevisionSetPb.newBuilder().setRevision(e.revision),
       ev => SiteRevisionSet(ev.getRevision),
       SiteRevisionSetPb.parseFrom
     ),
-    createEventMapTuple[SitePublished, SitePublishedPb, SitePublishedPb.Builder](
+    createEventDescriptor[SitePublished, SitePublishedPb, SitePublishedPb.Builder](
       e => SitePublishedPb.newBuilder(),
       _ => SitePublished(),
       SitePublishedPb.parseFrom
     ),
-    createEventMapTuple[SiteUnpublished, SiteUnpublishedPb, SiteUnpublishedPb.Builder](
+    createEventDescriptor[SiteUnpublished, SiteUnpublishedPb, SiteUnpublishedPb.Builder](
       e => SiteUnpublishedPb.newBuilder(),
       _ => SiteUnpublished(),
       SiteUnpublishedPb.parseFrom
     ),
-    createEventMapTuple[SiteFlagAdded, SiteFlagAddedPb, SiteFlagAddedPb.Builder](
+    createEventDescriptor[SiteFlagAdded, SiteFlagAddedPb, SiteFlagAddedPb.Builder](
       e => SiteFlagAddedPb.newBuilder().setSiteFlag(toSiteFlagPb(e.siteFlag)),
       ev => SiteFlagAdded(fromSiteFlagPb(ev.getSiteFlag)),
       SiteFlagAddedPb.parseFrom
     ),
-    createEventMapTuple[SiteFlagRemoved, SiteFlagRemovedPb, SiteFlagRemovedPb.Builder](
+    createEventDescriptor[SiteFlagRemoved, SiteFlagRemovedPb, SiteFlagRemovedPb.Builder](
       e => SiteFlagRemovedPb.newBuilder().setSiteFlag(toSiteFlagPb(e.siteFlag)),
       ev => SiteFlagRemoved(fromSiteFlagPb(ev.getSiteFlag)),
       SiteFlagRemovedPb.parseFrom
     ),
-    createEventMapTuple[DomainAdded, DomainAddedPb, DomainAddedPb.Builder](
+    createEventDescriptor[DomainAdded, DomainAddedPb, DomainAddedPb.Builder](
       e => DomainAddedPb.newBuilder().setName(e.name),
       ev => DomainAdded(ev.getName),
       DomainAddedPb.parseFrom
     ),
-    createEventMapTuple[DomainRemoved, DomainRemovedPb, DomainRemovedPb.Builder](
+    createEventDescriptor[DomainRemoved, DomainRemovedPb, DomainRemovedPb.Builder](
       e => DomainRemovedPb.newBuilder().setName(e.name),
       ev => DomainRemoved(ev.getName),
       DomainRemovedPb.parseFrom
     ),
-    createEventMapTuple[PrimaryDomainSet, PrimaryDomainSetPb, PrimaryDomainSetPb.Builder](
+    createEventDescriptor[PrimaryDomainSet, PrimaryDomainSetPb, PrimaryDomainSetPb.Builder](
       e => PrimaryDomainSetPb.newBuilder().setName(e.name),
       ev => PrimaryDomainSet(ev.getName),
       PrimaryDomainSetPb.parseFrom
     ),
-    createEventMapTuple[DefaultMetaTagAdded, DefaultMetaTagAddedPb, DefaultMetaTagAddedPb.Builder](
+    createEventDescriptor[DefaultMetaTagAdded, DefaultMetaTagAddedPb, DefaultMetaTagAddedPb.Builder](
       e => DefaultMetaTagAddedPb.newBuilder()
         .setName(e.name)
         .setValue(e.value),
       ev => DefaultMetaTagAdded(ev.getName, ev.getValue),
       DefaultMetaTagAddedPb.parseFrom
     ),
-    createEventMapTuple[DefaultMetaTagRemoved, DefaultMetaTagRemovedPb, DefaultMetaTagRemovedPb.Builder](
+    createEventDescriptor[DefaultMetaTagRemoved, DefaultMetaTagRemovedPb, DefaultMetaTagRemovedPb.Builder](
       e => DefaultMetaTagRemovedPb.newBuilder().setName(e.name),
       ev => DefaultMetaTagRemoved(ev.getName),
       DefaultMetaTagRemovedPb.parseFrom
     ),
-    createEventMapTuple[PageAdded, PageAddedPb, PageAddedPb.Builder](
+    createEventDescriptor[PageAdded, PageAddedPb, PageAddedPb.Builder](
       e => PageAddedPb.newBuilder().setPath(e.path),
       ev => PageAdded(ev.getPath),
       PageAddedPb.parseFrom
     ),
-    createEventMapTuple[PageRemoved, PageRemovedPb, PageRemovedPb.Builder](
+    createEventDescriptor[PageRemoved, PageRemovedPb, PageRemovedPb.Builder](
       e => PageRemovedPb.newBuilder().setPath(e.path),
       ev => PageRemoved(ev.getPath),
       PageRemovedPb.parseFrom
     ),
-    createEventMapTuple[PageNameSet, PageNameSetPb, PageNameSetPb.Builder](
+    createEventDescriptor[PageNameSet, PageNameSetPb, PageNameSetPb.Builder](
       e => PageNameSetPb.newBuilder()
         .setPath(e.path)
         .setName(e.name),
       ev => PageNameSet(ev.getPath, ev.getName),
       PageNameSetPb.parseFrom
     ),
-    createEventMapTuple[PageMetaTagAdded, PageMetaTagAddedPb, PageMetaTagAddedPb.Builder](
+    createEventDescriptor[PageMetaTagAdded, PageMetaTagAddedPb, PageMetaTagAddedPb.Builder](
       e => PageMetaTagAddedPb.newBuilder()
         .setPath(e.path)
         .setName(e.name)
@@ -341,14 +341,14 @@ object JavaPbConverter extends MyConverter {
       ev => PageMetaTagAdded(ev.getPath, ev.getName, ev.getValue),
       PageMetaTagAddedPb.parseFrom
     ),
-    createEventMapTuple[PageMetaTagRemoved, PageMetaTagRemovedPb, PageMetaTagRemovedPb.Builder](
+    createEventDescriptor[PageMetaTagRemoved, PageMetaTagRemovedPb, PageMetaTagRemovedPb.Builder](
       e => PageMetaTagRemovedPb.newBuilder()
         .setPath(e.path)
         .setName(e.name),
       ev => PageMetaTagRemoved(ev.getPath, ev.getName),
       PageMetaTagRemovedPb.parseFrom
     ),
-    createEventMapTuple[PageComponentAdded, PageComponentAddedPb, PageComponentAddedPb.Builder](
+    createEventDescriptor[PageComponentAdded, PageComponentAddedPb, PageComponentAddedPb.Builder](
       e => PageComponentAddedPb.newBuilder()
         .setPagePath(e.pagePath)
         .setId(ConversionUtils.uuidToBytes(e.id))
@@ -356,14 +356,14 @@ object JavaPbConverter extends MyConverter {
       ev => PageComponentAdded(ev.getPagePath, ConversionUtils.bytesToUuid(ev.getId), fromPageComponentTypePb(ev.getComponentType)),
       PageComponentAddedPb.parseFrom
     ),
-    createEventMapTuple[PageComponentRemoved, PageComponentRemovedPb, PageComponentRemovedPb.Builder](
+    createEventDescriptor[PageComponentRemoved, PageComponentRemovedPb, PageComponentRemovedPb.Builder](
       e => PageComponentRemovedPb.newBuilder()
         .setPagePath(e.pagePath)
         .setId(ConversionUtils.uuidToBytes(e.id)),
       ev => PageComponentRemoved(ev.getPagePath, ConversionUtils.bytesToUuid(ev.getId)),
       PageComponentRemovedPb.parseFrom
     ),
-    createEventMapTuple[PageComponentPositionSet, PageComponentPositionSetPb, PageComponentPositionSetPb.Builder](
+    createEventDescriptor[PageComponentPositionSet, PageComponentPositionSetPb, PageComponentPositionSetPb.Builder](
       e => PageComponentPositionSetPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setX(e.position.x)
@@ -371,19 +371,19 @@ object JavaPbConverter extends MyConverter {
       ev => PageComponentPositionSet(ConversionUtils.bytesToUuid(ev.getId), PageComponentPosition(ev.getX, ev.getY)),
       PageComponentPositionSetPb.parseFrom
     ),
-    createEventMapTuple[PageComponentPositionReset, PageComponentPositionResetPb, PageComponentPositionResetPb.Builder](
+    createEventDescriptor[PageComponentPositionReset, PageComponentPositionResetPb, PageComponentPositionResetPb.Builder](
       e => PageComponentPositionResetPb.newBuilder().setId(ConversionUtils.uuidToBytes(e.id)),
       ev => PageComponentPositionReset(ConversionUtils.bytesToUuid(ev.getId)),
       PageComponentPositionResetPb.parseFrom
     ),
-    createEventMapTuple[TextComponentDataSet, TextComponentDataSetPb, TextComponentDataSetPb.Builder](
+    createEventDescriptor[TextComponentDataSet, TextComponentDataSetPb, TextComponentDataSetPb.Builder](
       e => TextComponentDataSetPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setText(e.text),
       ev => TextComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getText),
       TextComponentDataSetPb.parseFrom
     ),
-    createEventMapTuple[ButtonComponentDataSet, ButtonComponentDataSetPb, ButtonComponentDataSetPb.Builder](
+    createEventDescriptor[ButtonComponentDataSet, ButtonComponentDataSetPb, ButtonComponentDataSetPb.Builder](
       e => ButtonComponentDataSetPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setName(e.name)
@@ -392,7 +392,7 @@ object JavaPbConverter extends MyConverter {
       ev => ButtonComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getName, ev.getText, ConversionUtils.bytesToUuid(ev.getAction)),
       ButtonComponentDataSetPb.parseFrom
     ),
-    createEventMapTuple[BlogComponentDataSet, BlogComponentDataSetPb, BlogComponentDataSetPb.Builder](
+    createEventDescriptor[BlogComponentDataSet, BlogComponentDataSetPb, BlogComponentDataSetPb.Builder](
       e => BlogComponentDataSetPb.newBuilder()
         .setId(ConversionUtils.uuidToBytes(e.id))
         .setName(e.name)
@@ -401,29 +401,29 @@ object JavaPbConverter extends MyConverter {
       ev => BlogComponentDataSet(ConversionUtils.bytesToUuid(ev.getId), ev.getName, ev.getRss, ev.getTags),
       BlogComponentDataSetPb.parseFrom
     ),
-    createEventMapTuple[DomainEntryPointAdded, DomainEntryPointAddedPb, DomainEntryPointAddedPb.Builder](
+    createEventDescriptor[DomainEntryPointAdded, DomainEntryPointAddedPb, DomainEntryPointAddedPb.Builder](
       e => DomainEntryPointAddedPb.newBuilder().setDomain(e.domain),
       ev => DomainEntryPointAdded(ev.getDomain),
       DomainEntryPointAddedPb.parseFrom
     ),
-    createEventMapTuple[FreeEntryPointAdded, FreeEntryPointAddedPb, FreeEntryPointAddedPb.Builder](
+    createEventDescriptor[FreeEntryPointAdded, FreeEntryPointAddedPb, FreeEntryPointAddedPb.Builder](
       e => FreeEntryPointAddedPb.newBuilder()
         .setUserName(e.userName)
         .setSiteName(e.siteName),
       ev => FreeEntryPointAdded(ev.getUserName, ev.getSiteName),
       FreeEntryPointAddedPb.parseFrom
     ),
-    createEventMapTuple[EntryPointRemoved, EntryPointRemovedPb, EntryPointRemovedPb.Builder](
+    createEventDescriptor[EntryPointRemoved, EntryPointRemovedPb, EntryPointRemovedPb.Builder](
       e => EntryPointRemovedPb.newBuilder().setLookupKey(e.lookupKey),
       ev => EntryPointRemoved(ev.getLookupKey),
       EntryPointRemovedPb.parseFrom
     ),
-    createEventMapTuple[PrimaryEntryPointSet, PrimaryEntryPointSetPb, PrimaryEntryPointSetPb.Builder](
+    createEventDescriptor[PrimaryEntryPointSet, PrimaryEntryPointSetPb, PrimaryEntryPointSetPb.Builder](
       e => PrimaryEntryPointSetPb.newBuilder().setLookupKey(e.lookupKey),
       ev => PrimaryEntryPointSet(ev.getLookupKey),
       PrimaryEntryPointSetPb.parseFrom
     )
   )
 
-  private val eventMap: Map[Class[_], BigTuple] = Map(eventHandlers.map(t => t.siteEventClass -> t): _*)
+  private val descriptorMap: Map[Class[_], EventDescriptor] = Map(eventHandlers.map(t => t.siteEventClass -> t): _*)
 }

@@ -67,13 +67,13 @@ object JavaThriftConverter extends MyConverter {
   }
 
   override def toByteArray(event: SiteEvent): Array[Byte] = {
-    val BigTuple(_, toMessage, _, _) = eventMap(event.getClass)
+    val EventDescriptor(_, toMessage, _, _) = descriptorMap(event.getClass)
     val proto = toMessage(event)
     serializer.serialize(proto)
   }
 
   override def siteEventFromByteArray(clazz: Class[_], bytes: Array[Byte]): SiteEvent = {
-    val BigTuple(_, _, fromMessage, factory) = eventMap(clazz)
+    val EventDescriptor(_, _, fromMessage, factory) = descriptorMap(clazz)
     val m = factory()
     deserializer.deserialize(m, bytes)
     fromMessage(m)
@@ -217,164 +217,162 @@ object JavaThriftConverter extends MyConverter {
   type FromMessageF = TBase[_, _] => SiteEvent
   type MessageFactoryF = () => TBase[_, _]
 
-  case class BigTuple(siteEventClass: Class[_],
-                      toMessage: ToMessageF,
-                      fromMessage: FromMessageF,
-                      factory: MessageFactoryF)
+  case class EventDescriptor(siteEventClass: Class[_],
+                             toMessage: ToMessageF,
+                             fromMessage: FromMessageF,
+                             factory: MessageFactoryF)
 
-  private def createEventMapTuple[T: ClassTag, M](generator: T => M,
-                                                  parser: () => M,
-                                                  extractor: M => T): BigTuple = {
-    BigTuple(
+  private def createEventDescriptor[T: ClassTag, M](toMessage: T => M, factory: () => M, fromMessage: M => T): EventDescriptor = {
+    EventDescriptor(
       implicitly[ClassTag[T]].runtimeClass,
-      generator.asInstanceOf[ToMessageF],
-      extractor.asInstanceOf[FromMessageF],
-      parser.asInstanceOf[MessageFactoryF]
+      toMessage.asInstanceOf[ToMessageF],
+      fromMessage.asInstanceOf[FromMessageF],
+      factory.asInstanceOf[MessageFactoryF]
     )
   }
 
-  private val eventMap: Map[Class[_], BigTuple] = Seq(
-    createEventMapTuple[SiteCreated, SiteCreatedPb](
+  private val descriptorMap: Map[Class[_], EventDescriptor] = Seq(
+    createEventDescriptor[SiteCreated, SiteCreatedPb](
       e => new SiteCreatedPb().setId(ConversionUtils.uuidToByteBuffer(e.id)).setOwnerId(ConversionUtils.uuidToByteBuffer(e.ownerId)).setSiteType(toSiteTypePb(e.siteType)),
       () => new SiteCreatedPb(),
       ev => SiteCreated(ConversionUtils.bytesToUuid(ev.id), ConversionUtils.bytesToUuid(ev.ownerId), fromSiteTypePb(ev.getSiteType))
     ),
-    createEventMapTuple[SiteNameSet, SiteNameSetPb](
+    createEventDescriptor[SiteNameSet, SiteNameSetPb](
       e => new SiteNameSetPb().setName(e.name),
       () => new SiteNameSetPb(),
       ev => SiteNameSet(ev.getName)
     ),
-    createEventMapTuple[SiteDescriptionSet, SiteDescriptionSetPb](
+    createEventDescriptor[SiteDescriptionSet, SiteDescriptionSetPb](
       e => new SiteDescriptionSetPb().setDescription(e.description),
       () => new SiteDescriptionSetPb(),
       ev => SiteDescriptionSet(ev.getDescription)
   ),
-    createEventMapTuple[SiteRevisionSet, SiteRevisionSetPb](
+    createEventDescriptor[SiteRevisionSet, SiteRevisionSetPb](
       e => new SiteRevisionSetPb().setRevision(e.revision),
       () => new SiteRevisionSetPb(),
       ev => SiteRevisionSet(ev.getRevision)
     ),
-    createEventMapTuple[SitePublished, SitePublishedPb](
+    createEventDescriptor[SitePublished, SitePublishedPb](
       e => new SitePublishedPb(),
       () => new SitePublishedPb(),
       ev => SitePublished()
     ),
-    createEventMapTuple[SiteUnpublished, SiteUnpublishedPb](
+    createEventDescriptor[SiteUnpublished, SiteUnpublishedPb](
       e => new SiteUnpublishedPb(),
       () => new SiteUnpublishedPb(),
       ev => SiteUnpublished()
     ),
-    createEventMapTuple[SiteFlagAdded, SiteFlagAddedPb](
+    createEventDescriptor[SiteFlagAdded, SiteFlagAddedPb](
       e => new SiteFlagAddedPb().setSiteFlag(toSiteFlagPb(e.siteFlag)),
       () => new SiteFlagAddedPb(),
       ev => SiteFlagAdded(fromSiteFlagPb(ev.getSiteFlag))
     ),
-    createEventMapTuple[SiteFlagRemoved, SiteFlagRemovedPb](
+    createEventDescriptor[SiteFlagRemoved, SiteFlagRemovedPb](
       e => new SiteFlagRemovedPb().setSiteFlag(toSiteFlagPb(e.siteFlag)),
       () => new SiteFlagRemovedPb(),
       ev => SiteFlagRemoved(fromSiteFlagPb(ev.getSiteFlag))
     ),
-    createEventMapTuple[DomainAdded, DomainAddedPb](
+    createEventDescriptor[DomainAdded, DomainAddedPb](
       e => new DomainAddedPb().setName(e.name),
       () => new DomainAddedPb(),
       ev => DomainAdded(ev.getName)
     ),
-    createEventMapTuple[DomainRemoved, DomainRemovedPb](
+    createEventDescriptor[DomainRemoved, DomainRemovedPb](
       e => new DomainRemovedPb().setName(e.name),
       () => new DomainRemovedPb(),
       ev => DomainRemoved(ev.getName)
     ),
-    createEventMapTuple[PrimaryDomainSet, PrimaryDomainSetPb](
+    createEventDescriptor[PrimaryDomainSet, PrimaryDomainSetPb](
       e => new PrimaryDomainSetPb().setName(e.name),
       () => new PrimaryDomainSetPb(),
       ev => PrimaryDomainSet(ev.getName)
     ),
-    createEventMapTuple[DefaultMetaTagAdded, DefaultMetaTagAddedPb](
+    createEventDescriptor[DefaultMetaTagAdded, DefaultMetaTagAddedPb](
       e => new DefaultMetaTagAddedPb().setName(e.name).setValue(e.value),
       () => new DefaultMetaTagAddedPb(),
       ev => DefaultMetaTagAdded(ev.getName, ev.getValue)
     ),
-    createEventMapTuple[DefaultMetaTagRemoved, DefaultMetaTagRemovedPb](
+    createEventDescriptor[DefaultMetaTagRemoved, DefaultMetaTagRemovedPb](
       e => new DefaultMetaTagRemovedPb().setName(e.name),
       () => new DefaultMetaTagRemovedPb(),
       ev => DefaultMetaTagRemoved(ev.getName)
     ),
-    createEventMapTuple[PageAdded, PageAddedPb](
+    createEventDescriptor[PageAdded, PageAddedPb](
       e => new PageAddedPb().setPath(e.path),
       () => new PageAddedPb(),
       ev => PageAdded(ev.getPath)
     ),
-    createEventMapTuple[PageRemoved, PageRemovedPb](
+    createEventDescriptor[PageRemoved, PageRemovedPb](
       e => new PageRemovedPb().setPath(e.path),
       () => new PageRemovedPb(),
       ev => PageRemoved(ev.getPath)
     ),
-    createEventMapTuple[PageNameSet, PageNameSetPb](
+    createEventDescriptor[PageNameSet, PageNameSetPb](
       e => new PageNameSetPb().setPath(e.path).setName(e.name),
       () => new PageNameSetPb(),
       ev => PageNameSet(ev.getPath, ev.getName)
     ),
-    createEventMapTuple[PageMetaTagAdded, PageMetaTagAddedPb](
+    createEventDescriptor[PageMetaTagAdded, PageMetaTagAddedPb](
       e => new PageMetaTagAddedPb().setPath(e.path).setName(e.name).setValue(e.value),
       () => new PageMetaTagAddedPb(),
       ev => PageMetaTagAdded(ev.getPath, ev.getName, ev.getValue)
     ),
-    createEventMapTuple[PageMetaTagRemoved, PageMetaTagRemovedPb](
+    createEventDescriptor[PageMetaTagRemoved, PageMetaTagRemovedPb](
       e => new PageMetaTagRemovedPb().setPath(e.path).setName(e.name),
       () => new PageMetaTagRemovedPb(),
       ev => PageMetaTagRemoved(ev.getPath, ev.getName)
     ),
-    createEventMapTuple[PageComponentAdded, PageComponentAddedPb](
+    createEventDescriptor[PageComponentAdded, PageComponentAddedPb](
       e => new PageComponentAddedPb().setPagePath(e.pagePath).setId(ConversionUtils.uuidToByteBuffer(e.id)).setComponentType(toPageComponentTypePb(e.componentType)),
       () => new PageComponentAddedPb(),
       ev => PageComponentAdded(ev.getPagePath, ConversionUtils.bytesToUuid(ev.id), fromPageComponentTypePb(ev.getComponentType))
     ),
-    createEventMapTuple[PageComponentRemoved, PageComponentRemovedPb](
+    createEventDescriptor[PageComponentRemoved, PageComponentRemovedPb](
       e => new PageComponentRemovedPb().setPagePath(e.pagePath).setId(ConversionUtils.uuidToByteBuffer(e.id)),
       () => new PageComponentRemovedPb(),
       ev => PageComponentRemoved(ev.getPagePath, ConversionUtils.bytesToUuid(ev.id))
     ),
-    createEventMapTuple[PageComponentPositionSet, PageComponentPositionSetPb](
+    createEventDescriptor[PageComponentPositionSet, PageComponentPositionSetPb](
       e => new PageComponentPositionSetPb().setId(ConversionUtils.uuidToByteBuffer(e.id)).setX(e.position.x).setY(e.position.y),
       () => new PageComponentPositionSetPb(),
       ev => PageComponentPositionSet(ConversionUtils.bytesToUuid(ev.id), PageComponentPosition(ev.getX, ev.getY))
     ),
-    createEventMapTuple[PageComponentPositionReset, PageComponentPositionResetPb](
+    createEventDescriptor[PageComponentPositionReset, PageComponentPositionResetPb](
       e => new PageComponentPositionResetPb().setId(ConversionUtils.uuidToByteBuffer(e.id)),
       () => new PageComponentPositionResetPb(),
       ev => PageComponentPositionReset(ConversionUtils.bytesToUuid(ev.id))
     ),
-    createEventMapTuple[TextComponentDataSet, TextComponentDataSetPb](
+    createEventDescriptor[TextComponentDataSet, TextComponentDataSetPb](
       e => new TextComponentDataSetPb().setId(ConversionUtils.uuidToByteBuffer(e.id)).setText(e.text),
       () => new TextComponentDataSetPb(),
       ev => TextComponentDataSet(ConversionUtils.bytesToUuid(ev.id), ev.getText)
     ),
-    createEventMapTuple[ButtonComponentDataSet, ButtonComponentDataSetPb](
+    createEventDescriptor[ButtonComponentDataSet, ButtonComponentDataSetPb](
       e => new ButtonComponentDataSetPb().setId(ConversionUtils.uuidToByteBuffer(e.id)).setName(e.name).setText(e.text).setAction(ConversionUtils.uuidToByteBuffer(e.action)),
       () => new ButtonComponentDataSetPb(),
       ev => ButtonComponentDataSet(ConversionUtils.bytesToUuid(ev.id), ev.getName, ev.getText, ConversionUtils.bytesToUuid(ev.action))
     ),
-    createEventMapTuple[BlogComponentDataSet, BlogComponentDataSetPb](
+    createEventDescriptor[BlogComponentDataSet, BlogComponentDataSetPb](
       e => new BlogComponentDataSetPb().setId(ConversionUtils.uuidToByteBuffer(e.id)).setName(e.name).setRss(e.rss).setTags(e.tags),
       () => new BlogComponentDataSetPb(),
       ev => BlogComponentDataSet(ConversionUtils.bytesToUuid(ev.id), ev.getName, ev.isRss, ev.isTags)
     ),
-    createEventMapTuple[DomainEntryPointAdded, DomainEntryPointAddedPb](
+    createEventDescriptor[DomainEntryPointAdded, DomainEntryPointAddedPb](
       e => new DomainEntryPointAddedPb().setDomain(e.domain),
       () => new DomainEntryPointAddedPb(),
       ev => DomainEntryPointAdded(ev.getDomain)
     ),
-    createEventMapTuple[FreeEntryPointAdded, FreeEntryPointAddedPb](
+    createEventDescriptor[FreeEntryPointAdded, FreeEntryPointAddedPb](
       e => new FreeEntryPointAddedPb().setUserName(e.userName).setSiteName(e.siteName),
       () => new FreeEntryPointAddedPb(),
       ev => FreeEntryPointAdded(ev.getUserName, ev.getSiteName)
     ),
-    createEventMapTuple[EntryPointRemoved, EntryPointRemovedPb](
+    createEventDescriptor[EntryPointRemoved, EntryPointRemovedPb](
       e => new EntryPointRemovedPb().setLookupKey(e.lookupKey),
       () => new EntryPointRemovedPb(),
       ev => EntryPointRemoved(ev.getLookupKey)
     ),
-    createEventMapTuple[PrimaryEntryPointSet, PrimaryEntryPointSetPb](
+    createEventDescriptor[PrimaryEntryPointSet, PrimaryEntryPointSetPb](
       e => new PrimaryEntryPointSetPb().setLookupKey(e.lookupKey),
       () => new PrimaryEntryPointSetPb(),
       ev => PrimaryEntryPointSet(ev.getLookupKey)
