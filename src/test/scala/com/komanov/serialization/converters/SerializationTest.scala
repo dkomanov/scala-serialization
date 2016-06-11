@@ -18,8 +18,8 @@ class SerializationTest extends Specification {
   doTest("Java Thrift", JavaThriftConverter)
   doTest("Scrooge", ScroogeConverter)
   doTest("Serializable", JavaSerializationConverter)
-  doTest("Pickles", PicklingConverter)
-  doTest("Boopickle", BoopickleConverter)
+  doTest("Pickling", PicklingConverter)
+  doTest("BooPickle", BoopickleConverter)
   doTest("Chill", ChillConverter)
 
   "ScalaPB and Java Protobuf" should {
