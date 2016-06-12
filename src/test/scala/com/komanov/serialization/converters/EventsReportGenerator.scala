@@ -68,7 +68,7 @@ object EventsReportGenerator extends App {
         val normalizedConverterName = converterName.toLowerCase().replace(" ", "-")
         Files.write(dir.getParentFile.toPath.resolve(s"site_${name}_$normalizedConverterName.bin"), bytes, StandardOpenOption.CREATE)
         for ((event, eventBytes) <- eventsAndBytes) {
-          Files.write(dir.toPath.resolve(s"${name}_${normalizedConverterName}_${event.event.getClass.getSimpleName}.bin"), bytes, StandardOpenOption.CREATE)
+          Files.write(dir.toPath.resolve(s"${name}_${normalizedConverterName}_${event.event.getClass.getSimpleName}.bin"), eventBytes, StandardOpenOption.CREATE)
         }
       }
     }
