@@ -30,11 +30,11 @@ object BoopickleConverter extends MyConverter {
     util.Arrays.copyOfRange(bb.array(), 0, bb.limit())
   }
 
-  implicit val instantPickler = transformPickler[Instant, Long](_.toEpochMilli, t => Instant.ofEpochMilli(t))
+  implicit val instantPickler = transformPickler[Instant, Long](t => Instant.ofEpochMilli(t))(_.toEpochMilli)
 
-  implicit val pageComponentTypePickler = transformPickler[PageComponentType, String](_.name(), t => PageComponentType.valueOf(t))
-  implicit val siteFlagPickler = transformPickler[SiteFlag, String](_.name(), t => SiteFlag.valueOf(t))
-  implicit val siteTypePickler = transformPickler[SiteType, String](_.name(), t => SiteType.valueOf(t))
+  implicit val pageComponentTypePickler = transformPickler(PageComponentType.valueOf)(_.name())
+  implicit val siteFlagPickler = transformPickler(SiteFlag.valueOf)(_.name())
+  implicit val siteTypePickler = transformPickler(SiteType.valueOf)(_.name())
 
   implicit val entryPointPickler = compositePickler[EntryPoint]
     .addConcreteType[DomainEntryPoint]
