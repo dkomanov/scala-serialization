@@ -12,10 +12,19 @@ final case class SiteRevisionSetPb(
     revision: Long = 0L
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[SiteRevisionSetPb] with com.trueaccord.lenses.Updatable[SiteRevisionSetPb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
       if (revision != 0L) { __size += com.google.protobuf.CodedOutputStream.computeUInt64Size(1, revision) }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       {
@@ -63,7 +72,7 @@ object SiteRevisionSetPb extends com.trueaccord.scalapb.GeneratedMessageCompanio
       __fieldsMap.getOrElse(__fields.get(0), 0L).asInstanceOf[Long]
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoEventsProto.descriptor.getMessageTypes.get(3)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = EventsProto.descriptor.getMessageTypes.get(3)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__field)
   def enumCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__field)
   lazy val defaultInstance = com.komanov.serialization.domain.protos.events.SiteRevisionSetPb(

@@ -13,11 +13,20 @@ final case class DefaultMetaTagAddedPb(
     value: String = ""
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[DefaultMetaTagAddedPb] with com.trueaccord.lenses.Updatable[DefaultMetaTagAddedPb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
       if (name != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, name) }
       if (value != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(2, value) }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       {
@@ -81,7 +90,7 @@ object DefaultMetaTagAddedPb extends com.trueaccord.scalapb.GeneratedMessageComp
       __fieldsMap.getOrElse(__fields.get(1), "").asInstanceOf[String]
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoEventsProto.descriptor.getMessageTypes.get(11)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = EventsProto.descriptor.getMessageTypes.get(11)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__field)
   def enumCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__field)
   lazy val defaultInstance = com.komanov.serialization.domain.protos.events.DefaultMetaTagAddedPb(

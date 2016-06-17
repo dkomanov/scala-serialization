@@ -15,13 +15,22 @@ final case class PagePb(
     components: Seq[com.komanov.serialization.domain.protos.site.PageComponentPb] = Nil
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[PagePb] with com.trueaccord.lenses.Updatable[PagePb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
       if (name != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, name) }
       if (path != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(2, path) }
-      metaTags.foreach(metaTags => __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(metaTags.serializedSize) + metaTags.serializedSize)
-      components.foreach(components => __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(components.serializedSize) + components.serializedSize)
+      metaTags.foreach(metaTags => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(metaTags.serializedSize) + metaTags.serializedSize)
+      components.foreach(components => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(components.serializedSize) + components.serializedSize)
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       {
@@ -38,12 +47,12 @@ final case class PagePb(
       };
       metaTags.foreach { __v => 
         output.writeTag(3, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       components.foreach { __v => 
         output.writeTag(4, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
     }
@@ -115,7 +124,7 @@ object PagePb extends com.trueaccord.scalapb.GeneratedMessageCompanion[PagePb] {
       __fieldsMap.getOrElse(__fields.get(3), Nil).asInstanceOf[Seq[com.komanov.serialization.domain.protos.site.PageComponentPb]]
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoSiteProto.descriptor.getMessageTypes.get(6)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = SiteProto.descriptor.getMessageTypes.get(6)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = {
     require(__field.getContainingType() == descriptor, "FieldDescriptor does not match message type.")
     var __out: com.trueaccord.scalapb.GeneratedMessageCompanion[_] = null

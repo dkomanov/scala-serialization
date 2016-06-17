@@ -56,5 +56,5 @@ object SiteFlagPb extends com.trueaccord.scalapb.GeneratedEnumCompanion[SiteFlag
     case 2 => Premium
     case __other => Unrecognized(__other)
   }
-  def descriptor: com.google.protobuf.Descriptors.EnumDescriptor = SrcMainProtoSiteProto.descriptor.getEnumTypes.get(1)
+  def descriptor: com.google.protobuf.Descriptors.EnumDescriptor = SiteProto.descriptor.getEnumTypes.get(1)
 }

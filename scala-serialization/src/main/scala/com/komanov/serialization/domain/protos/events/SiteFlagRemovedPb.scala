@@ -12,10 +12,19 @@ final case class SiteFlagRemovedPb(
     siteFlag: com.komanov.serialization.domain.protos.site.SiteFlagPb = com.komanov.serialization.domain.protos.site.SiteFlagPb.UnknownSiteFlag
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[SiteFlagRemovedPb] with com.trueaccord.lenses.Updatable[SiteFlagRemovedPb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
       if (siteFlag != com.komanov.serialization.domain.protos.site.SiteFlagPb.UnknownSiteFlag) { __size += com.google.protobuf.CodedOutputStream.computeEnumSize(1, siteFlag.value) }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       {
@@ -63,7 +72,7 @@ object SiteFlagRemovedPb extends com.trueaccord.scalapb.GeneratedMessageCompanio
       com.komanov.serialization.domain.protos.site.SiteFlagPb.fromValue(__fieldsMap.getOrElse(__fields.get(0), com.komanov.serialization.domain.protos.site.SiteFlagPb.UnknownSiteFlag.valueDescriptor).asInstanceOf[com.google.protobuf.Descriptors.EnumValueDescriptor].getNumber)
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoEventsProto.descriptor.getMessageTypes.get(7)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = EventsProto.descriptor.getMessageTypes.get(7)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__field)
   def enumCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedEnumCompanion[_] = {
     require(__field.getContainingType() == descriptor, "FieldDescriptor does not match message type.")

@@ -12,183 +12,192 @@ final case class SiteEventPb(
     ev: com.komanov.serialization.domain.protos.events.SiteEventPb.Ev = com.komanov.serialization.domain.protos.events.SiteEventPb.Ev.Empty
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[SiteEventPb] with com.trueaccord.lenses.Updatable[SiteEventPb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
-      if (ev.siteCreatedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.siteCreatedPb.get.serializedSize) + ev.siteCreatedPb.get.serializedSize }
-      if (ev.siteNameSetPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.siteNameSetPb.get.serializedSize) + ev.siteNameSetPb.get.serializedSize }
-      if (ev.siteDescriptionSetPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.siteDescriptionSetPb.get.serializedSize) + ev.siteDescriptionSetPb.get.serializedSize }
-      if (ev.siteRevisionSetPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.siteRevisionSetPb.get.serializedSize) + ev.siteRevisionSetPb.get.serializedSize }
-      if (ev.sitePublishedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.sitePublishedPb.get.serializedSize) + ev.sitePublishedPb.get.serializedSize }
-      if (ev.siteUnpublishedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.siteUnpublishedPb.get.serializedSize) + ev.siteUnpublishedPb.get.serializedSize }
-      if (ev.siteFlagAddedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.siteFlagAddedPb.get.serializedSize) + ev.siteFlagAddedPb.get.serializedSize }
-      if (ev.siteFlagRemovedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.siteFlagRemovedPb.get.serializedSize) + ev.siteFlagRemovedPb.get.serializedSize }
-      if (ev.domainAddedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.domainAddedPb.get.serializedSize) + ev.domainAddedPb.get.serializedSize }
-      if (ev.domainRemovedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.domainRemovedPb.get.serializedSize) + ev.domainRemovedPb.get.serializedSize }
-      if (ev.primaryDomainSetPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.primaryDomainSetPb.get.serializedSize) + ev.primaryDomainSetPb.get.serializedSize }
-      if (ev.defaultMetaTagAddedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.defaultMetaTagAddedPb.get.serializedSize) + ev.defaultMetaTagAddedPb.get.serializedSize }
-      if (ev.defaultMetaTagRemovedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.defaultMetaTagRemovedPb.get.serializedSize) + ev.defaultMetaTagRemovedPb.get.serializedSize }
-      if (ev.pageAddedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageAddedPb.get.serializedSize) + ev.pageAddedPb.get.serializedSize }
-      if (ev.pageRemovedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageRemovedPb.get.serializedSize) + ev.pageRemovedPb.get.serializedSize }
-      if (ev.pageNameSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageNameSetPb.get.serializedSize) + ev.pageNameSetPb.get.serializedSize }
-      if (ev.pageMetaTagAddedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageMetaTagAddedPb.get.serializedSize) + ev.pageMetaTagAddedPb.get.serializedSize }
-      if (ev.pageMetaTagRemovedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageMetaTagRemovedPb.get.serializedSize) + ev.pageMetaTagRemovedPb.get.serializedSize }
-      if (ev.pageComponentAddedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageComponentAddedPb.get.serializedSize) + ev.pageComponentAddedPb.get.serializedSize }
-      if (ev.pageComponentRemovedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageComponentRemovedPb.get.serializedSize) + ev.pageComponentRemovedPb.get.serializedSize }
-      if (ev.pageComponentPositionSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageComponentPositionSetPb.get.serializedSize) + ev.pageComponentPositionSetPb.get.serializedSize }
-      if (ev.pageComponentPositionResetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.pageComponentPositionResetPb.get.serializedSize) + ev.pageComponentPositionResetPb.get.serializedSize }
-      if (ev.textComponentDataSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.textComponentDataSetPb.get.serializedSize) + ev.textComponentDataSetPb.get.serializedSize }
-      if (ev.buttonComponentDataSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.buttonComponentDataSetPb.get.serializedSize) + ev.buttonComponentDataSetPb.get.serializedSize }
-      if (ev.blogComponentDataSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.blogComponentDataSetPb.get.serializedSize) + ev.blogComponentDataSetPb.get.serializedSize }
-      if (ev.domainEntryPointAddedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.domainEntryPointAddedPb.get.serializedSize) + ev.domainEntryPointAddedPb.get.serializedSize }
-      if (ev.freeEntryPointAddedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.freeEntryPointAddedPb.get.serializedSize) + ev.freeEntryPointAddedPb.get.serializedSize }
-      if (ev.entryPointRemovedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.entryPointRemovedPb.get.serializedSize) + ev.entryPointRemovedPb.get.serializedSize }
-      if (ev.primaryEntryPointSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ev.primaryEntryPointSetPb.get.serializedSize) + ev.primaryEntryPointSetPb.get.serializedSize }
+      if (ev.siteCreatedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.siteCreatedPb.get.serializedSize) + ev.siteCreatedPb.get.serializedSize }
+      if (ev.siteNameSetPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.siteNameSetPb.get.serializedSize) + ev.siteNameSetPb.get.serializedSize }
+      if (ev.siteDescriptionSetPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.siteDescriptionSetPb.get.serializedSize) + ev.siteDescriptionSetPb.get.serializedSize }
+      if (ev.siteRevisionSetPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.siteRevisionSetPb.get.serializedSize) + ev.siteRevisionSetPb.get.serializedSize }
+      if (ev.sitePublishedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.sitePublishedPb.get.serializedSize) + ev.sitePublishedPb.get.serializedSize }
+      if (ev.siteUnpublishedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.siteUnpublishedPb.get.serializedSize) + ev.siteUnpublishedPb.get.serializedSize }
+      if (ev.siteFlagAddedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.siteFlagAddedPb.get.serializedSize) + ev.siteFlagAddedPb.get.serializedSize }
+      if (ev.siteFlagRemovedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.siteFlagRemovedPb.get.serializedSize) + ev.siteFlagRemovedPb.get.serializedSize }
+      if (ev.domainAddedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.domainAddedPb.get.serializedSize) + ev.domainAddedPb.get.serializedSize }
+      if (ev.domainRemovedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.domainRemovedPb.get.serializedSize) + ev.domainRemovedPb.get.serializedSize }
+      if (ev.primaryDomainSetPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.primaryDomainSetPb.get.serializedSize) + ev.primaryDomainSetPb.get.serializedSize }
+      if (ev.defaultMetaTagAddedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.defaultMetaTagAddedPb.get.serializedSize) + ev.defaultMetaTagAddedPb.get.serializedSize }
+      if (ev.defaultMetaTagRemovedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.defaultMetaTagRemovedPb.get.serializedSize) + ev.defaultMetaTagRemovedPb.get.serializedSize }
+      if (ev.pageAddedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageAddedPb.get.serializedSize) + ev.pageAddedPb.get.serializedSize }
+      if (ev.pageRemovedPb.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageRemovedPb.get.serializedSize) + ev.pageRemovedPb.get.serializedSize }
+      if (ev.pageNameSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageNameSetPb.get.serializedSize) + ev.pageNameSetPb.get.serializedSize }
+      if (ev.pageMetaTagAddedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageMetaTagAddedPb.get.serializedSize) + ev.pageMetaTagAddedPb.get.serializedSize }
+      if (ev.pageMetaTagRemovedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageMetaTagRemovedPb.get.serializedSize) + ev.pageMetaTagRemovedPb.get.serializedSize }
+      if (ev.pageComponentAddedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageComponentAddedPb.get.serializedSize) + ev.pageComponentAddedPb.get.serializedSize }
+      if (ev.pageComponentRemovedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageComponentRemovedPb.get.serializedSize) + ev.pageComponentRemovedPb.get.serializedSize }
+      if (ev.pageComponentPositionSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageComponentPositionSetPb.get.serializedSize) + ev.pageComponentPositionSetPb.get.serializedSize }
+      if (ev.pageComponentPositionResetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.pageComponentPositionResetPb.get.serializedSize) + ev.pageComponentPositionResetPb.get.serializedSize }
+      if (ev.textComponentDataSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.textComponentDataSetPb.get.serializedSize) + ev.textComponentDataSetPb.get.serializedSize }
+      if (ev.buttonComponentDataSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.buttonComponentDataSetPb.get.serializedSize) + ev.buttonComponentDataSetPb.get.serializedSize }
+      if (ev.blogComponentDataSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.blogComponentDataSetPb.get.serializedSize) + ev.blogComponentDataSetPb.get.serializedSize }
+      if (ev.domainEntryPointAddedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.domainEntryPointAddedPb.get.serializedSize) + ev.domainEntryPointAddedPb.get.serializedSize }
+      if (ev.freeEntryPointAddedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.freeEntryPointAddedPb.get.serializedSize) + ev.freeEntryPointAddedPb.get.serializedSize }
+      if (ev.entryPointRemovedPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.entryPointRemovedPb.get.serializedSize) + ev.entryPointRemovedPb.get.serializedSize }
+      if (ev.primaryEntryPointSetPb.isDefined) { __size += 2 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ev.primaryEntryPointSetPb.get.serializedSize) + ev.primaryEntryPointSetPb.get.serializedSize }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       ev.siteCreatedPb.foreach { __v => 
         output.writeTag(1, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.siteNameSetPb.foreach { __v => 
         output.writeTag(2, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.siteDescriptionSetPb.foreach { __v => 
         output.writeTag(3, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.siteRevisionSetPb.foreach { __v => 
         output.writeTag(4, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.sitePublishedPb.foreach { __v => 
         output.writeTag(5, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.siteUnpublishedPb.foreach { __v => 
         output.writeTag(6, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.siteFlagAddedPb.foreach { __v => 
         output.writeTag(7, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.siteFlagRemovedPb.foreach { __v => 
         output.writeTag(8, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.domainAddedPb.foreach { __v => 
         output.writeTag(9, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.domainRemovedPb.foreach { __v => 
         output.writeTag(10, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.primaryDomainSetPb.foreach { __v => 
         output.writeTag(11, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.defaultMetaTagAddedPb.foreach { __v => 
         output.writeTag(12, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.defaultMetaTagRemovedPb.foreach { __v => 
         output.writeTag(13, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageAddedPb.foreach { __v => 
         output.writeTag(14, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageRemovedPb.foreach { __v => 
         output.writeTag(15, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageNameSetPb.foreach { __v => 
         output.writeTag(16, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageMetaTagAddedPb.foreach { __v => 
         output.writeTag(17, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageMetaTagRemovedPb.foreach { __v => 
         output.writeTag(18, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageComponentAddedPb.foreach { __v => 
         output.writeTag(19, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageComponentRemovedPb.foreach { __v => 
         output.writeTag(20, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageComponentPositionSetPb.foreach { __v => 
         output.writeTag(21, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.pageComponentPositionResetPb.foreach { __v => 
         output.writeTag(22, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.textComponentDataSetPb.foreach { __v => 
         output.writeTag(23, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.buttonComponentDataSetPb.foreach { __v => 
         output.writeTag(24, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.blogComponentDataSetPb.foreach { __v => 
         output.writeTag(25, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.domainEntryPointAddedPb.foreach { __v => 
         output.writeTag(26, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.freeEntryPointAddedPb.foreach { __v => 
         output.writeTag(27, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.entryPointRemovedPb.foreach { __v => 
         output.writeTag(28, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ev.primaryEntryPointSetPb.foreach { __v => 
         output.writeTag(29, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
     }
@@ -398,7 +407,7 @@ __fieldsMap.get(__fields.get(27)).asInstanceOf[scala.Option[com.komanov.serializ
 __fieldsMap.get(__fields.get(28)).asInstanceOf[scala.Option[com.komanov.serialization.domain.protos.events.PrimaryEntryPointSetPb]].map(com.komanov.serialization.domain.protos.events.SiteEventPb.Ev.PrimaryEntryPointSetPb(_)) getOrElse com.komanov.serialization.domain.protos.events.SiteEventPb.Ev.Empty
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoEventsProto.descriptor.getMessageTypes.get(29)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = EventsProto.descriptor.getMessageTypes.get(29)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = {
     require(__field.getContainingType() == descriptor, "FieldDescriptor does not match message type.")
     var __out: com.trueaccord.scalapb.GeneratedMessageCompanion[_] = null

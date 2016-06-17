@@ -13,11 +13,20 @@ final case class PageComponentPositionPb(
     y: Int = 0
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[PageComponentPositionPb] with com.trueaccord.lenses.Updatable[PageComponentPositionPb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
       if (x != 0) { __size += com.google.protobuf.CodedOutputStream.computeUInt32Size(1, x) }
       if (y != 0) { __size += com.google.protobuf.CodedOutputStream.computeUInt32Size(2, y) }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       {
@@ -81,7 +90,7 @@ object PageComponentPositionPb extends com.trueaccord.scalapb.GeneratedMessageCo
       __fieldsMap.getOrElse(__fields.get(1), 0).asInstanceOf[Int]
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoSiteProto.descriptor.getMessageTypes.get(4)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = SiteProto.descriptor.getMessageTypes.get(4)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__field)
   def enumCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedEnumCompanion[_] = throw new MatchError(__field)
   lazy val defaultInstance = com.komanov.serialization.domain.protos.site.PageComponentPositionPb(

@@ -12,21 +12,30 @@ final case class EntryPointPb(
     ep: com.komanov.serialization.domain.protos.site.EntryPointPb.Ep = com.komanov.serialization.domain.protos.site.EntryPointPb.Ep.Empty
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[EntryPointPb] with com.trueaccord.lenses.Updatable[EntryPointPb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
-      if (ep.domain.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ep.domain.get.serializedSize) + ep.domain.get.serializedSize }
-      if (ep.free.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(ep.free.get.serializedSize) + ep.free.get.serializedSize }
+      if (ep.domain.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ep.domain.get.serializedSize) + ep.domain.get.serializedSize }
+      if (ep.free.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(ep.free.get.serializedSize) + ep.free.get.serializedSize }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       ep.domain.foreach { __v => 
         output.writeTag(1, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       ep.free.foreach { __v => 
         output.writeTag(2, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
     }
@@ -74,7 +83,7 @@ object EntryPointPb extends com.trueaccord.scalapb.GeneratedMessageCompanion[Ent
 __fieldsMap.get(__fields.get(1)).asInstanceOf[scala.Option[com.komanov.serialization.domain.protos.site.EntryPointPb.FreeEntryPointPb]].map(com.komanov.serialization.domain.protos.site.EntryPointPb.Ep.Free(_)) getOrElse com.komanov.serialization.domain.protos.site.EntryPointPb.Ep.Empty
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoSiteProto.descriptor.getMessageTypes.get(1)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = SiteProto.descriptor.getMessageTypes.get(1)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = {
     require(__field.getContainingType() == descriptor, "FieldDescriptor does not match message type.")
     var __out: com.trueaccord.scalapb.GeneratedMessageCompanion[_] = null
@@ -123,11 +132,20 @@ __fieldsMap.get(__fields.get(1)).asInstanceOf[scala.Option[com.komanov.serializa
       primary: Boolean = false
       ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[DomainEntryPointPb] with com.trueaccord.lenses.Updatable[DomainEntryPointPb] {
       @transient
-      lazy val serializedSize: Int = {
+      private[this] var __serializedSizeCachedValue: Int = 0
+      private[this] def __computeSerializedValue(): Int = {
         var __size = 0
         if (domain != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, domain) }
         if (primary != false) { __size += com.google.protobuf.CodedOutputStream.computeBoolSize(2, primary) }
         __size
+      }
+      final override def serializedSize: Int = {
+        var read = __serializedSizeCachedValue
+        if (read == 0) {
+          read = __computeSerializedValue()
+          __serializedSizeCachedValue = read
+        }
+        read
       }
       def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
         {
@@ -211,12 +229,21 @@ __fieldsMap.get(__fields.get(1)).asInstanceOf[scala.Option[com.komanov.serializa
       primary: Boolean = false
       ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[FreeEntryPointPb] with com.trueaccord.lenses.Updatable[FreeEntryPointPb] {
       @transient
-      lazy val serializedSize: Int = {
+      private[this] var __serializedSizeCachedValue: Int = 0
+      private[this] def __computeSerializedValue(): Int = {
         var __size = 0
         if (userName != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, userName) }
         if (siteName != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(2, siteName) }
         if (primary != false) { __size += com.google.protobuf.CodedOutputStream.computeBoolSize(3, primary) }
         __size
+      }
+      final override def serializedSize: Int = {
+        var read = __serializedSizeCachedValue
+        if (read == 0) {
+          read = __computeSerializedValue()
+          __serializedSizeCachedValue = read
+        }
+        read
       }
       def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
         {

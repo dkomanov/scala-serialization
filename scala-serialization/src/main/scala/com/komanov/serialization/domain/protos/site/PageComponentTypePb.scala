@@ -66,5 +66,5 @@ object PageComponentTypePb extends com.trueaccord.scalapb.GeneratedEnumCompanion
     case 3 => Blog
     case __other => Unrecognized(__other)
   }
-  def descriptor: com.google.protobuf.Descriptors.EnumDescriptor = SrcMainProtoSiteProto.descriptor.getEnumTypes.get(2)
+  def descriptor: com.google.protobuf.Descriptors.EnumDescriptor = SiteProto.descriptor.getEnumTypes.get(2)
 }

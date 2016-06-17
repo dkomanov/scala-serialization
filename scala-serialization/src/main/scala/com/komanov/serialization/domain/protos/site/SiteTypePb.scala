@@ -66,5 +66,5 @@ object SiteTypePb extends com.trueaccord.scalapb.GeneratedEnumCompanion[SiteType
     case 3 => Html5
     case __other => Unrecognized(__other)
   }
-  def descriptor: com.google.protobuf.Descriptors.EnumDescriptor = SrcMainProtoSiteProto.descriptor.getEnumTypes.get(0)
+  def descriptor: com.google.protobuf.Descriptors.EnumDescriptor = SiteProto.descriptor.getEnumTypes.get(0)
 }

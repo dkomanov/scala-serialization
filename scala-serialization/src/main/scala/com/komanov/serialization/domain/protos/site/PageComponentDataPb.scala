@@ -12,27 +12,36 @@ final case class PageComponentDataPb(
     data: com.komanov.serialization.domain.protos.site.PageComponentDataPb.Data = com.komanov.serialization.domain.protos.site.PageComponentDataPb.Data.Empty
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[PageComponentDataPb] with com.trueaccord.lenses.Updatable[PageComponentDataPb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
-      if (data.text.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(data.text.get.serializedSize) + data.text.get.serializedSize }
-      if (data.button.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(data.button.get.serializedSize) + data.button.get.serializedSize }
-      if (data.blog.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(data.blog.get.serializedSize) + data.blog.get.serializedSize }
+      if (data.text.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(data.text.get.serializedSize) + data.text.get.serializedSize }
+      if (data.button.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(data.button.get.serializedSize) + data.button.get.serializedSize }
+      if (data.blog.isDefined) { __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(data.blog.get.serializedSize) + data.blog.get.serializedSize }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       data.text.foreach { __v => 
         output.writeTag(1, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       data.button.foreach { __v => 
         output.writeTag(2, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       data.blog.foreach { __v => 
         output.writeTag(3, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
     }
@@ -86,7 +95,7 @@ __fieldsMap.get(__fields.get(1)).asInstanceOf[scala.Option[com.komanov.serializa
 __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[com.komanov.serialization.domain.protos.site.PageComponentDataPb.BlogComponentDataPb]].map(com.komanov.serialization.domain.protos.site.PageComponentDataPb.Data.Blog(_)) getOrElse com.komanov.serialization.domain.protos.site.PageComponentDataPb.Data.Empty
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoSiteProto.descriptor.getMessageTypes.get(3)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = SiteProto.descriptor.getMessageTypes.get(3)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = {
     require(__field.getContainingType() == descriptor, "FieldDescriptor does not match message type.")
     var __out: com.trueaccord.scalapb.GeneratedMessageCompanion[_] = null
@@ -143,10 +152,19 @@ __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[com.komanov.serializa
       text: String = ""
       ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[TextComponentDataPb] with com.trueaccord.lenses.Updatable[TextComponentDataPb] {
       @transient
-      lazy val serializedSize: Int = {
+      private[this] var __serializedSizeCachedValue: Int = 0
+      private[this] def __computeSerializedValue(): Int = {
         var __size = 0
         if (text != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, text) }
         __size
+      }
+      final override def serializedSize: Int = {
+        var read = __serializedSizeCachedValue
+        if (read == 0) {
+          read = __computeSerializedValue()
+          __serializedSizeCachedValue = read
+        }
+        read
       }
       def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
         {
@@ -212,12 +230,21 @@ __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[com.komanov.serializa
       action: com.google.protobuf.ByteString = com.google.protobuf.ByteString.EMPTY
       ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[ButtonComponentDataPb] with com.trueaccord.lenses.Updatable[ButtonComponentDataPb] {
       @transient
-      lazy val serializedSize: Int = {
+      private[this] var __serializedSizeCachedValue: Int = 0
+      private[this] def __computeSerializedValue(): Int = {
         var __size = 0
         if (name != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, name) }
         if (text != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(2, text) }
         if (action != com.google.protobuf.ByteString.EMPTY) { __size += com.google.protobuf.CodedOutputStream.computeBytesSize(3, action) }
         __size
+      }
+      final override def serializedSize: Int = {
+        var read = __serializedSizeCachedValue
+        if (read == 0) {
+          read = __computeSerializedValue()
+          __serializedSizeCachedValue = read
+        }
+        read
       }
       def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
         {
@@ -319,12 +346,21 @@ __fieldsMap.get(__fields.get(2)).asInstanceOf[scala.Option[com.komanov.serializa
       tags: Boolean = false
       ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[BlogComponentDataPb] with com.trueaccord.lenses.Updatable[BlogComponentDataPb] {
       @transient
-      lazy val serializedSize: Int = {
+      private[this] var __serializedSizeCachedValue: Int = 0
+      private[this] def __computeSerializedValue(): Int = {
         var __size = 0
         if (name != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, name) }
         if (rss != false) { __size += com.google.protobuf.CodedOutputStream.computeBoolSize(2, rss) }
         if (tags != false) { __size += com.google.protobuf.CodedOutputStream.computeBoolSize(3, tags) }
         __size
+      }
+      final override def serializedSize: Int = {
+        var read = __serializedSizeCachedValue
+        if (read == 0) {
+          read = __computeSerializedValue()
+          __serializedSizeCachedValue = read
+        }
+        read
       }
       def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
         {

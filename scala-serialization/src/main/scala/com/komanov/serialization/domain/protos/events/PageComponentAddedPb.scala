@@ -14,12 +14,21 @@ final case class PageComponentAddedPb(
     componentType: com.komanov.serialization.domain.protos.site.PageComponentTypePb = com.komanov.serialization.domain.protos.site.PageComponentTypePb.UnknownPageComponentType
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[PageComponentAddedPb] with com.trueaccord.lenses.Updatable[PageComponentAddedPb] {
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
       if (pagePath != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(1, pagePath) }
       if (id != com.google.protobuf.ByteString.EMPTY) { __size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, id) }
       if (componentType != com.komanov.serialization.domain.protos.site.PageComponentTypePb.UnknownPageComponentType) { __size += com.google.protobuf.CodedOutputStream.computeEnumSize(3, componentType.value) }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       {
@@ -99,7 +108,7 @@ object PageComponentAddedPb extends com.trueaccord.scalapb.GeneratedMessageCompa
       com.komanov.serialization.domain.protos.site.PageComponentTypePb.fromValue(__fieldsMap.getOrElse(__fields.get(2), com.komanov.serialization.domain.protos.site.PageComponentTypePb.UnknownPageComponentType.valueDescriptor).asInstanceOf[com.google.protobuf.Descriptors.EnumValueDescriptor].getNumber)
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoEventsProto.descriptor.getMessageTypes.get(18)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = EventsProto.descriptor.getMessageTypes.get(18)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = throw new MatchError(__field)
   def enumCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedEnumCompanion[_] = {
     require(__field.getContainingType() == descriptor, "FieldDescriptor does not match message type.")

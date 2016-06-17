@@ -24,28 +24,42 @@ final case class SitePb(
     dateCreated: Long = 0L,
     dateUpdated: Long = 0L
     ) extends com.trueaccord.scalapb.GeneratedMessage with com.trueaccord.scalapb.Message[SitePb] with com.trueaccord.lenses.Updatable[SitePb] {
-    lazy val flagsSerializedSize =
+    private[this] def flagsSerializedSize = {
+    if (__flagsSerializedSizeField == 0) __flagsSerializedSizeField = 
       flags.map((com.google.protobuf.CodedOutputStream.computeEnumSizeNoTag _).compose((_: com.komanov.serialization.domain.protos.site.SiteFlagPb).value)).sum
+    __flagsSerializedSizeField
+    }
+    @transient private[this] var __flagsSerializedSizeField: Int = 0
     @transient
-    lazy val serializedSize: Int = {
+    private[this] var __serializedSizeCachedValue: Int = 0
+    private[this] def __computeSerializedValue(): Int = {
       var __size = 0
       if (id != com.google.protobuf.ByteString.EMPTY) { __size += com.google.protobuf.CodedOutputStream.computeBytesSize(1, id) }
       if (ownerId != com.google.protobuf.ByteString.EMPTY) { __size += com.google.protobuf.CodedOutputStream.computeBytesSize(2, ownerId) }
       if (revision != 0L) { __size += com.google.protobuf.CodedOutputStream.computeUInt64Size(3, revision) }
       if (siteType != com.komanov.serialization.domain.protos.site.SiteTypePb.UnknownSiteType) { __size += com.google.protobuf.CodedOutputStream.computeEnumSize(4, siteType.value) }
       if(flags.nonEmpty) {
-        __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(flagsSerializedSize) + flagsSerializedSize
+        val __localsize = flagsSerializedSize
+        __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(__localsize) + __localsize
       }
       if (name != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(6, name) }
       if (description != "") { __size += com.google.protobuf.CodedOutputStream.computeStringSize(7, description) }
-      domains.foreach(domains => __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(domains.serializedSize) + domains.serializedSize)
-      defaultMetaTags.foreach(defaultMetaTags => __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(defaultMetaTags.serializedSize) + defaultMetaTags.serializedSize)
-      pages.foreach(pages => __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(pages.serializedSize) + pages.serializedSize)
-      entryPoints.foreach(entryPoints => __size += 1 + com.google.protobuf.CodedOutputStream.computeRawVarint32Size(entryPoints.serializedSize) + entryPoints.serializedSize)
+      domains.foreach(domains => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(domains.serializedSize) + domains.serializedSize)
+      defaultMetaTags.foreach(defaultMetaTags => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(defaultMetaTags.serializedSize) + defaultMetaTags.serializedSize)
+      pages.foreach(pages => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(pages.serializedSize) + pages.serializedSize)
+      entryPoints.foreach(entryPoints => __size += 1 + com.google.protobuf.CodedOutputStream.computeUInt32SizeNoTag(entryPoints.serializedSize) + entryPoints.serializedSize)
       if (published != false) { __size += com.google.protobuf.CodedOutputStream.computeBoolSize(12, published) }
       if (dateCreated != 0L) { __size += com.google.protobuf.CodedOutputStream.computeUInt64Size(13, dateCreated) }
       if (dateUpdated != 0L) { __size += com.google.protobuf.CodedOutputStream.computeUInt64Size(14, dateUpdated) }
       __size
+    }
+    final override def serializedSize: Int = {
+      var read = __serializedSizeCachedValue
+      if (read == 0) {
+        read = __computeSerializedValue()
+        __serializedSizeCachedValue = read
+      }
+      read
     }
     def writeTo(output: com.google.protobuf.CodedOutputStream): Unit = {
       {
@@ -74,7 +88,7 @@ final case class SitePb(
       };
       if (flags.nonEmpty) {
         output.writeTag(5, 2)
-        output.writeRawVarint32(flagsSerializedSize)
+        output.writeUInt32NoTag(flagsSerializedSize)
         flags.foreach((output.writeEnumNoTag _).compose((_: com.komanov.serialization.domain.protos.site.SiteFlagPb).value))
       };
       {
@@ -91,22 +105,22 @@ final case class SitePb(
       };
       domains.foreach { __v => 
         output.writeTag(8, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       defaultMetaTags.foreach { __v => 
         output.writeTag(9, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       pages.foreach { __v => 
         output.writeTag(10, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       entryPoints.foreach { __v => 
         output.writeTag(11, 2)
-        output.writeRawVarint32(__v.serializedSize)
+        output.writeUInt32NoTag(__v.serializedSize)
         __v.writeTo(output)
       };
       {
@@ -304,7 +318,7 @@ object SitePb extends com.trueaccord.scalapb.GeneratedMessageCompanion[SitePb] {
       __fieldsMap.getOrElse(__fields.get(13), 0L).asInstanceOf[Long]
     )
   }
-  def descriptor: com.google.protobuf.Descriptors.Descriptor = SrcMainProtoSiteProto.descriptor.getMessageTypes.get(7)
+  def descriptor: com.google.protobuf.Descriptors.Descriptor = SiteProto.descriptor.getMessageTypes.get(7)
   def messageCompanionForField(__field: com.google.protobuf.Descriptors.FieldDescriptor): com.trueaccord.scalapb.GeneratedMessageCompanion[_] = {
     require(__field.getContainingType() == descriptor, "FieldDescriptor does not match message type.")
     var __out: com.trueaccord.scalapb.GeneratedMessageCompanion[_] = null
