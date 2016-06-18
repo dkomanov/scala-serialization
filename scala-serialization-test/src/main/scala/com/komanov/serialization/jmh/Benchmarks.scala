@@ -9,14 +9,16 @@ import org.openjdk.jmh.annotations._
 @State(Scope.Benchmark)
 @BenchmarkMode(Array(Mode.AverageTime, Mode.SampleTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(1)
+@Fork(value = 1, jvmArgs = Array("-Xmx2G"))
 @Measurement(iterations = 10, batchSize = 100)
 @Warmup(iterations = 1, batchSize = 100)
-abstract class BenchmarkBase {
+abstract class BenchmarkBase(converter: MyConverter) {
 
-  import TestData._
-
-  def converter: MyConverter
+  private val site1k = TestData.site1k
+  private val site2k = TestData.site2k
+  private val site4k = TestData.site4k
+  private val site8k = TestData.site8k
+  private val site64k = TestData.site64k
 
   private val site1kBytes = converter.toByteArray(site1k)
   private val site2kBytes = converter.toByteArray(site2k)
@@ -38,27 +40,27 @@ abstract class BenchmarkBase {
 
   @Benchmark
   def serialization_site_1k(): Array[Byte] = {
-    converter.toByteArray(TestData.site1k)
+    converter.toByteArray(site1k)
   }
 
   @Benchmark
   def serialization_site_2k(): Array[Byte] = {
-    converter.toByteArray(TestData.site2k)
+    converter.toByteArray(site2k)
   }
 
   @Benchmark
   def serialization_site_4k(): Array[Byte] = {
-    converter.toByteArray(TestData.site4k)
+    converter.toByteArray(site4k)
   }
 
   @Benchmark
   def serialization_site_8k(): Array[Byte] = {
-    converter.toByteArray(TestData.site8k)
+    converter.toByteArray(site8k)
   }
 
   @Benchmark
   def serialization_site_64k(): Array[Byte] = {
-    converter.toByteArray(TestData.site64k)
+    converter.toByteArray(site64k)
   }
 
   @Benchmark
@@ -166,38 +168,20 @@ abstract class BenchmarkBase {
 
 }
 
-class JsonBenchmark extends BenchmarkBase {
-  override def converter = JsonConverter
-}
+class JsonBenchmark extends BenchmarkBase(JsonConverter)
 
-class ScalaPbBenchmark extends BenchmarkBase {
-  override def converter = ScalaPbConverter
-}
+class ScalaPbBenchmark extends BenchmarkBase(ScalaPbConverter)
 
-class JavaPbBenchmark extends BenchmarkBase {
-  override def converter = JavaPbConverter
-}
+class JavaPbBenchmark extends BenchmarkBase(JavaPbConverter)
 
-class JavaThriftBenchmark extends BenchmarkBase {
-  override def converter = JavaThriftConverter
-}
+class JavaThriftBenchmark extends BenchmarkBase(JavaThriftConverter)
 
-class ScroogeBenchmark extends BenchmarkBase {
-  override def converter = ScroogeConverter
-}
+class ScroogeBenchmark extends BenchmarkBase(ScroogeConverter)
 
-class JavaSerializationBenchmark extends BenchmarkBase {
-  override def converter = JavaSerializationConverter
-}
+class JavaSerializationBenchmark extends BenchmarkBase(JavaSerializationConverter)
 
-class PicklingBenchmark extends BenchmarkBase {
-  override def converter = PicklingConverter
-}
+class PicklingBenchmark extends BenchmarkBase(PicklingConverter)
 
-class BooPickleBenchmark extends BenchmarkBase {
-  override def converter = BoopickleConverter
-}
+class BooPickleBenchmark extends BenchmarkBase(BoopickleConverter)
 
-class ChillBenchmark extends BenchmarkBase {
-  override def converter = ChillConverter
-}
+class ChillBenchmark extends BenchmarkBase(ChillConverter)
