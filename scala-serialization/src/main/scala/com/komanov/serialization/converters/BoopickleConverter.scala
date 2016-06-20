@@ -5,13 +5,20 @@ import java.time.Instant
 import java.util
 
 import boopickle.Default._
+import boopickle.{BufferPool, DecoderSize, EncoderSize}
 import com.komanov.serialization.domain._
 
 /** https://github.com/ochrons/boopickle */
 object BoopickleConverter extends MyConverter {
 
+  implicit def pickleState = new PickleState(new EncoderSize, false)
+  implicit val unpickleState = (bb: ByteBuffer) => new UnpickleState(new DecoderSize(bb), false)
+
   override def toByteArray(site: Site): Array[Byte] = {
-    bbToArray(Pickle.intoBytes(site))
+    val bb = Pickle.intoBytes(site)
+    val a = bbToArray(bb)
+    BufferPool.release(bb)
+    a
   }
 
   override def fromByteArray(bytes: Array[Byte]): Site = {
@@ -19,7 +26,10 @@ object BoopickleConverter extends MyConverter {
   }
 
   override def toByteArray(event: SiteEvent): Array[Byte] = {
-    bbToArray(Pickle.intoBytes(event))
+    val bb = Pickle.intoBytes(event)
+    val a = bbToArray(bb)
+    BufferPool.release(bb)
+    a
   }
 
   override def siteEventFromByteArray(clazz: Class[_], bytes: Array[Byte]): SiteEvent = {
