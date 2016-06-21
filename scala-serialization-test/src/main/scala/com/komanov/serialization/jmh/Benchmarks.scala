@@ -7,11 +7,11 @@ import com.komanov.serialization.domain.{EventProcessor, Site, SiteEvent}
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Benchmark)
-@BenchmarkMode(Array(Mode.AverageTime, Mode.SampleTime))
+@BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Fork(value = 1, jvmArgs = Array("-Xmx2G"))
-@Measurement(iterations = 10, batchSize = 100)
-@Warmup(iterations = 1, batchSize = 100)
+@Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 2, time = 5, timeUnit = TimeUnit.SECONDS)
 abstract class BenchmarkBase(converter: MyConverter) {
 
   private val site1k = TestData.site1k
