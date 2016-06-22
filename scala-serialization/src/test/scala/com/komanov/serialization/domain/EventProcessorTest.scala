@@ -1,10 +1,10 @@
 package com.komanov.serialization.domain
 
 import com.komanov.serialization.converters.TestData
-import org.specs2.mutable.Specification
+import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.core.Fragments
 
-class EventProcessorTest extends Specification {
+class EventProcessorTest extends SpecificationWithJUnit {
 
   "apply/unapply" should {
     Fragments.foreach(TestData.sites) { case (name, site) =>

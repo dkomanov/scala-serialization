@@ -3,10 +3,10 @@ package com.komanov.serialization.converters
 import java.time.Instant
 import java.util.UUID
 
-import org.specs2.mutable.Specification
+import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
 
-class ConversionsUtilsTest extends Specification {
+class ConversionsUtilsTest extends SpecificationWithJUnit {
 
   "UUID" should {
     "be serialized-parsed" in new ctx {

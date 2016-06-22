@@ -4,11 +4,11 @@ import java.io.ByteArrayOutputStream
 
 import com.komanov.serialization.domain.SiteEventData
 import org.apache.commons.io.HexDump
-import org.specs2.mutable.Specification
+import org.specs2.mutable.SpecificationWithJUnit
 import org.specs2.specification.Scope
 import org.specs2.specification.core.Fragments
 
-class SerializationTest extends Specification {
+class SerializationTest extends SpecificationWithJUnit {
 
   sequential
 
