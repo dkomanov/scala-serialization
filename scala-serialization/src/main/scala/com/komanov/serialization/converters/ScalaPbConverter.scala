@@ -77,6 +77,10 @@ object ScalaPbConverter extends MyConverter {
     fromMessage(parse(bytes))
   }
 
+  override def toByteArray(events: Seq[SiteEvent]): Array[Byte] = Array.empty[Byte]
+
+  override def siteEventSeqFromByteArray(bytes: Array[Byte]): Seq[SiteEvent] = Seq.empty
+
   private def toMetaTagPb(mt: MetaTag) = MetaTagPb(mt.name, mt.value)
 
   private def fromMetaTagPb(mt: MetaTagPb) = MetaTag(mt.name, mt.value)

@@ -62,4 +62,8 @@ object JsonConverter extends MyConverter {
     objectMapper.readValue(bytes, clazz).asInstanceOf[SiteEvent]
   }
 
+  override def toByteArray(events: Seq[SiteEvent]): Array[Byte] = Array.empty[Byte]
+
+  override def siteEventSeqFromByteArray(bytes: Array[Byte]): Seq[SiteEvent] = Seq.empty
+
 }

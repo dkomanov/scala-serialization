@@ -38,6 +38,12 @@ abstract class BenchmarkBase(converter: MyConverter) {
   private val events8kOutput = createEventsOutput(site8k)
   private val events64kOutput = createEventsOutput(site64k)
 
+  private val eventSeq1kOutput = createEventSeqOutput(site1k)
+  private val eventSeq2kOutput = createEventSeqOutput(site2k)
+  private val eventSeq4kOutput = createEventSeqOutput(site4k)
+  private val eventSeq8kOutput = createEventSeqOutput(site8k)
+  private val eventSeq64kOutput = createEventSeqOutput(site64k)
+
   @Benchmark
   def serialization_site_1k(): Array[Byte] = {
     converter.toByteArray(site1k)
@@ -158,6 +164,56 @@ abstract class BenchmarkBase(converter: MyConverter) {
     }
   }
 
+  @Benchmark
+  def serialization_eventseq_1k(): Any = {
+    converter.toByteArray(events1kInput)
+  }
+
+  @Benchmark
+  def serialization_eventseq_2k(): Any = {
+    converter.toByteArray(events2kInput)
+  }
+
+  @Benchmark
+  def serialization_eventseq_4k(): Any = {
+    converter.toByteArray(events4kInput)
+  }
+
+  @Benchmark
+  def serialization_eventseq_8k(): Any = {
+    converter.toByteArray(events8kInput)
+  }
+
+  @Benchmark
+  def serialization_eventseq_64k(): Any = {
+    converter.toByteArray(events64kInput)
+  }
+
+  @Benchmark
+  def deserialization_eventseq_1k(): Any = {
+    converter.siteEventSeqFromByteArray(eventSeq1kOutput)
+  }
+
+  @Benchmark
+  def deserialization_eventseq_2k(): Any = {
+    converter.siteEventSeqFromByteArray(eventSeq2kOutput)
+  }
+
+  @Benchmark
+  def deserialization_eventseq_4k(): Any = {
+    converter.siteEventSeqFromByteArray(eventSeq4kOutput)
+  }
+
+  @Benchmark
+  def deserialization_eventseq_8k(): Any = {
+    converter.siteEventSeqFromByteArray(eventSeq8kOutput)
+  }
+
+  @Benchmark
+  def deserialization_eventseq_64k(): Any = {
+    converter.siteEventSeqFromByteArray(eventSeq64kOutput)
+  }
+
   private def createEventsInput(site: Site): Seq[SiteEvent] = {
     EventProcessor.unapply(site).map(_.event)
   }
@@ -166,6 +222,9 @@ abstract class BenchmarkBase(converter: MyConverter) {
     EventProcessor.unapply(site).map(_.event).map(e => e.getClass -> converter.toByteArray(e))
   }
 
+  private def createEventSeqOutput(site: Site): Array[Byte] = {
+    converter.toByteArray(EventProcessor.unapply(site).map(_.event))
+  }
 }
 
 class JsonBenchmark extends BenchmarkBase(JsonConverter)

@@ -78,6 +78,10 @@ object ScroogeConverter extends MyConverter {
     fromMessage(codec.decode(new TBinaryProtocol(transport)))
   }
 
+  override def toByteArray(events: Seq[SiteEvent]): Array[Byte] = Array.empty[Byte]
+
+  override def siteEventSeqFromByteArray(bytes: Array[Byte]): Seq[SiteEvent] = Seq.empty
+
   private def toMetaTagPb(mt: MetaTag) = {
     new MetaTagPb.Immutable(Option(mt.name), Option(mt.value))
   }

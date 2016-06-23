@@ -79,6 +79,10 @@ object JavaPbConverter extends MyConverter {
     fromMessage(parser(bytes))
   }
 
+  override def toByteArray(events: Seq[SiteEvent]): Array[Byte] = Array.empty[Byte]
+
+  override def siteEventSeqFromByteArray(bytes: Array[Byte]): Seq[SiteEvent] = Seq.empty
+
   private def toMetaTagPb(mt: MetaTag) = {
     MetaTagPb.newBuilder()
       .setName(mt.name)
