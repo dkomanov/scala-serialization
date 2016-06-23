@@ -73,77 +73,77 @@ import scala.pickling.directSubclasses
 sealed trait SiteEvent {
 }
 
-case class SiteEventData(id: UUID,
+final case class SiteEventData(id: UUID,
                          event: SiteEvent,
                          timestamp: Instant)
 
 
-case class SiteCreated(id: UUID, ownerId: UUID, siteType: SiteType) extends SiteEvent
+final case class SiteCreated(id: UUID, ownerId: UUID, siteType: SiteType) extends SiteEvent
 
-case class SiteNameSet(name: String) extends SiteEvent
+final case class SiteNameSet(name: String) extends SiteEvent
 
-case class SiteDescriptionSet(description: String) extends SiteEvent
+final case class SiteDescriptionSet(description: String) extends SiteEvent
 
-case class SiteRevisionSet(revision: Long) extends SiteEvent
+final case class SiteRevisionSet(revision: Long) extends SiteEvent
 
-case class SitePublished() extends SiteEvent
+final case class SitePublished() extends SiteEvent
 
-case class SiteUnpublished() extends SiteEvent
+final case class SiteUnpublished() extends SiteEvent
 
 // SiteFlag
 
-case class SiteFlagAdded(siteFlag: SiteFlag) extends SiteEvent
+final case class SiteFlagAdded(siteFlag: SiteFlag) extends SiteEvent
 
-case class SiteFlagRemoved(siteFlag: SiteFlag) extends SiteEvent
+final case class SiteFlagRemoved(siteFlag: SiteFlag) extends SiteEvent
 
 // Domain
 
-case class DomainAdded(name: String) extends SiteEvent
+final case class DomainAdded(name: String) extends SiteEvent
 
-case class DomainRemoved(name: String) extends SiteEvent
+final case class DomainRemoved(name: String) extends SiteEvent
 
-case class PrimaryDomainSet(name: String) extends SiteEvent
+final case class PrimaryDomainSet(name: String) extends SiteEvent
 
 // DefaultMetaTag
 
-case class DefaultMetaTagAdded(name: String, value: String) extends SiteEvent
+final case class DefaultMetaTagAdded(name: String, value: String) extends SiteEvent
 
-case class DefaultMetaTagRemoved(name: String) extends SiteEvent
+final case class DefaultMetaTagRemoved(name: String) extends SiteEvent
 
 // Page
 
-case class PageAdded(path: String) extends SiteEvent
+final case class PageAdded(path: String) extends SiteEvent
 
-case class PageRemoved(path: String) extends SiteEvent
+final case class PageRemoved(path: String) extends SiteEvent
 
-case class PageNameSet(path: String, name: String) extends SiteEvent
+final case class PageNameSet(path: String, name: String) extends SiteEvent
 
-case class PageMetaTagAdded(path: String, name: String, value: String) extends SiteEvent
+final case class PageMetaTagAdded(path: String, name: String, value: String) extends SiteEvent
 
-case class PageMetaTagRemoved(path: String, name: String) extends SiteEvent
+final case class PageMetaTagRemoved(path: String, name: String) extends SiteEvent
 
 // Page::PageComponent
 
-case class PageComponentAdded(pagePath: String, id: UUID, componentType: PageComponentType) extends SiteEvent
+final case class PageComponentAdded(pagePath: String, id: UUID, componentType: PageComponentType) extends SiteEvent
 
-case class PageComponentRemoved(pagePath: String, id: UUID) extends SiteEvent
+final case class PageComponentRemoved(pagePath: String, id: UUID) extends SiteEvent
 
-case class PageComponentPositionSet(id: UUID, position: PageComponentPosition) extends SiteEvent
+final case class PageComponentPositionSet(id: UUID, position: PageComponentPosition) extends SiteEvent
 
-case class PageComponentPositionReset(id: UUID) extends SiteEvent
+final case class PageComponentPositionReset(id: UUID) extends SiteEvent
 
-case class TextComponentDataSet(id: UUID, text: String) extends SiteEvent
+final case class TextComponentDataSet(id: UUID, text: String) extends SiteEvent
 
-case class ButtonComponentDataSet(id: UUID, name: String, text: String, action: UUID) extends SiteEvent
+final case class ButtonComponentDataSet(id: UUID, name: String, text: String, action: UUID) extends SiteEvent
 
-case class BlogComponentDataSet(id: UUID, name: String, rss: Boolean, tags: Boolean) extends SiteEvent
+final case class BlogComponentDataSet(id: UUID, name: String, rss: Boolean, tags: Boolean) extends SiteEvent
 
 // EntryPoint
 
-case class DomainEntryPointAdded(domain: String) extends SiteEvent
+final case class DomainEntryPointAdded(domain: String) extends SiteEvent
 
-case class FreeEntryPointAdded(userName: String, siteName: String) extends SiteEvent
+final case class FreeEntryPointAdded(userName: String, siteName: String) extends SiteEvent
 
-case class EntryPointRemoved(lookupKey: String) extends SiteEvent
+final case class EntryPointRemoved(lookupKey: String) extends SiteEvent
 
-case class PrimaryEntryPointSet(lookupKey: String) extends SiteEvent
+final case class PrimaryEntryPointSet(lookupKey: String) extends SiteEvent
