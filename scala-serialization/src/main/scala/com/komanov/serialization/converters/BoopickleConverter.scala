@@ -11,8 +11,8 @@ import com.komanov.serialization.domain._
 /** https://github.com/ochrons/boopickle */
 object BoopickleConverter extends MyConverter {
 
-  implicit def pickleState = new PickleState(new EncoderSize, false)
-  implicit val unpickleState = (bb: ByteBuffer) => new UnpickleState(new DecoderSize(bb), false)
+  implicit def pickleState = new PickleState(new EncoderSize, false, false)
+  implicit val unpickleState = (bb: ByteBuffer) => new UnpickleState(new DecoderSize(bb), false, false)
 
   override def toByteArray(site: Site): Array[Byte] = {
     val bb = Pickle.intoBytes(site)
@@ -42,9 +42,13 @@ object BoopickleConverter extends MyConverter {
 
   implicit val instantPickler = transformPickler[Instant, Long](t => Instant.ofEpochMilli(t))(_.toEpochMilli)
 
-  implicit val pageComponentTypePickler = transformPickler(PageComponentType.valueOf)(_.name())
-  implicit val siteFlagPickler = transformPickler(SiteFlag.valueOf)(_.name())
-  implicit val siteTypePickler = transformPickler(SiteType.valueOf)(_.name())
+  val pageComponentTypeValues = PageComponentType.values()
+  val siteFlagValues = SiteFlag.values()
+  val siteTypeValues = SiteType.values()
+
+  implicit val pageComponentTypePickler = transformPickler((i: Int) => pageComponentTypeValues(i))(_.ordinal())
+  implicit val siteFlagPickler = transformPickler((i: Int) => siteFlagValues(i))(_.ordinal())
+  implicit val siteTypePickler = transformPickler((i: Int) => siteTypeValues(i))(_.ordinal())
 
   implicit val entryPointPickler = compositePickler[EntryPoint]
     .addConcreteType[DomainEntryPoint]
