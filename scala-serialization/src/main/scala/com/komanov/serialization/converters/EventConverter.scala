@@ -8,4 +8,8 @@ trait EventConverter {
 
   def siteEventFromByteArray(clazz: Class[_], bytes: Array[Byte]): SiteEvent
 
+  def toByteArray(events: Seq[SiteEvent]): Array[Byte]
+
+  def siteEventSeqFromByteArray(bytes: Array[Byte]): Seq[SiteEvent]
+
 }

@@ -79,6 +79,10 @@ object JavaThriftConverter extends MyConverter {
     fromMessage(m)
   }
 
+  override def toByteArray(events: Seq[SiteEvent]): Array[Byte] = Array.empty[Byte]
+
+  override def siteEventSeqFromByteArray(bytes: Array[Byte]): Seq[SiteEvent] = Seq.empty
+
   private def serializer = new TSerializer(new TBinaryProtocol.Factory())
 
   private def deserializer = new TDeserializer(new TBinaryProtocol.Factory())

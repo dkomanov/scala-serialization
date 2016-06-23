@@ -36,6 +36,17 @@ object BoopickleConverter extends MyConverter {
     Unpickle[SiteEvent].fromBytes(ByteBuffer.wrap(bytes))
   }
 
+  override def toByteArray(events: Seq[SiteEvent]): Array[Byte] = {
+    val bb = Pickle.intoBytes(events)
+    val a = bbToArray(bb)
+    BufferPool.release(bb)
+    a
+  }
+
+  override def siteEventSeqFromByteArray(bytes: Array[Byte]): Seq[SiteEvent] = {
+    Unpickle[Seq[SiteEvent]].fromBytes(ByteBuffer.wrap(bytes))
+  }
+
   private def bbToArray(bb: ByteBuffer) = {
     util.Arrays.copyOfRange(bb.array(), 0, bb.limit())
   }
