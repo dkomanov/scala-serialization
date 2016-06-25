@@ -159,6 +159,66 @@ abstract class BenchmarkBase(converter: MyConverter) {
     }
   }
 
+  @Benchmark
+  def both_site_1k(): Site = {
+    converter.fromByteArray(converter.toByteArray(site1k))
+  }
+
+  @Benchmark
+  def both_site_2k(): Site = {
+    converter.fromByteArray(converter.toByteArray(site2k))
+  }
+
+  @Benchmark
+  def both_site_4k(): Site = {
+    converter.fromByteArray(converter.toByteArray(site4k))
+  }
+
+  @Benchmark
+  def both_site_8k(): Site = {
+    converter.fromByteArray(converter.toByteArray(site8k))
+  }
+
+  @Benchmark
+  def both_site_64k(): Site = {
+    converter.fromByteArray(converter.toByteArray(site64k))
+  }
+
+  @Benchmark
+  def both_events_1k(): Any = {
+    for (e <- events1kInput) {
+      converter.siteEventFromByteArray(e.getClass, converter.toByteArray(e))
+    }
+  }
+
+  @Benchmark
+  def both_events_2k(): Any = {
+    for (e <- events2kInput) {
+      converter.siteEventFromByteArray(e.getClass, converter.toByteArray(e))
+    }
+  }
+
+  @Benchmark
+  def both_events_4k(): Any = {
+    for (e <- events4kInput) {
+      converter.siteEventFromByteArray(e.getClass, converter.toByteArray(e))
+    }
+  }
+
+  @Benchmark
+  def both_events_8k(): Any = {
+    for (e <- events8kInput) {
+      converter.siteEventFromByteArray(e.getClass, converter.toByteArray(e))
+    }
+  }
+
+  @Benchmark
+  def both_events_64k(): Any = {
+    for (e <- events64kInput) {
+      converter.siteEventFromByteArray(e.getClass, converter.toByteArray(e))
+    }
+  }
+
   private def createEventsInput(site: Site): Seq[SiteEvent] = {
     EventProcessor.unapply(site).map(_.event)
   }
