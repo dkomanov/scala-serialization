@@ -10,6 +10,7 @@ import org.openjdk.jmh.annotations._
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Fork(value = 1, jvmArgs = Array("-Xmx2G"))
+@Threads(2)
 @Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS)
 @Warmup(iterations = 2, time = 5, timeUnit = TimeUnit.SECONDS)
 abstract class BenchmarkBase(converter: MyConverter) {
