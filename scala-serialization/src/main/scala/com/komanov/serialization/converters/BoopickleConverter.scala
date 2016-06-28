@@ -11,8 +11,10 @@ import com.komanov.serialization.domain._
 /** https://github.com/ochrons/boopickle */
 object BoopickleConverter extends MyConverter {
 
-  implicit def pickleState = new PickleState(new EncoderSize, false)
-  implicit val unpickleState = (bb: ByteBuffer) => new UnpickleState(new DecoderSize(bb), false)
+  implicit def pickleState = new PickleState(new EncoderSize, false, false)
+  implicit val unpickleState = (bb: ByteBuffer) => new UnpickleState(new DecoderSize(bb), false, false)
+
+  BufferPool.disable()
 
   override def toByteArray(site: Site): Array[Byte] = {
     val bb = Pickle.intoBytes(site)
