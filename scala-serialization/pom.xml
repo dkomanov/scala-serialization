@@ -87,7 +87,13 @@
             <artifactId>scrooge-core_2.11</artifactId>
             <version>4.7.0</version>
         </dependency>
-
+        <dependency>
+            <groupId>ms.webmaster.macroserialization</groupId>
+            <artifactId>macroserialization</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/jar/serial_2.11.8.jar</systemPath>
+        </dependency>
         <!-- test -->
 
         <dependency>
