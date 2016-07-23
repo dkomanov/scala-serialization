@@ -3,7 +3,7 @@ package com.komanov.serialization.converters
 import com.komanov.serialization.domain._
 import com.komanov.serialization.domain.thriftscala._
 import com.twitter.scrooge._
-import org.apache.thrift.protocol.TBinaryProtocol
+import org.apache.thrift.protocol.TCompactProtocol
 
 import scala.language.existentials
 import scala.reflect.ClassTag
@@ -32,14 +32,14 @@ object ScroogeConverter extends MyConverter {
     )
 
     val transport = new TArrayByteTransport
-    SitePb.encode(proto, new TBinaryProtocol(transport))
+    SitePb.encode(proto, new TCompactProtocol(transport))
     transport.toByteArray
   }
 
   override def fromByteArray(bytes: Array[Byte]): Site = {
     val transport = new TArrayByteTransport
     transport.setBytes(bytes)
-    val site = SitePb.decode(new TBinaryProtocol(transport))
+    val site = SitePb.decode(new TCompactProtocol(transport))
 
     Site(
       ConversionUtils.bytesToUuid(site.id.get),
@@ -66,7 +66,7 @@ object ScroogeConverter extends MyConverter {
     val proto = toMessage(event)
 
     val transport = new TArrayByteTransport
-    codec.asInstanceOf[ThriftStructCodec[ThriftStruct]].encode(proto, new TBinaryProtocol(transport))
+    codec.asInstanceOf[ThriftStructCodec[ThriftStruct]].encode(proto, new TCompactProtocol(transport))
     transport.toByteArray
   }
 
@@ -75,7 +75,7 @@ object ScroogeConverter extends MyConverter {
 
     val transport = new TArrayByteTransport
     transport.setBytes(bytes)
-    fromMessage(codec.decode(new TBinaryProtocol(transport)))
+    fromMessage(codec.decode(new TCompactProtocol(transport)))
   }
 
   private def toMetaTagPb(mt: MetaTag) = {
