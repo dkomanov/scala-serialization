@@ -2,7 +2,7 @@ package com.komanov.serialization.converters
 
 import com.komanov.serialization.domain._
 import com.komanov.serialization.domain.thrift._
-import org.apache.thrift.protocol.TBinaryProtocol
+import org.apache.thrift.protocol.TCompactProtocol
 import org.apache.thrift.{TBase, TDeserializer, TSerializer}
 
 import scala.collection.JavaConversions._
@@ -79,9 +79,9 @@ object JavaThriftConverter extends MyConverter {
     fromMessage(m)
   }
 
-  private def serializer = new TSerializer(new TBinaryProtocol.Factory())
+  private def serializer = new TSerializer(new TCompactProtocol.Factory())
 
-  private def deserializer = new TDeserializer(new TBinaryProtocol.Factory())
+  private def deserializer = new TDeserializer(new TCompactProtocol.Factory())
 
   private def toMetaTagPb(mt: MetaTag) = {
     new MetaTagPb()
