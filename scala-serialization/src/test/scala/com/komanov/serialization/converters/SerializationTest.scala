@@ -21,6 +21,7 @@ class SerializationTest extends SpecificationWithJUnit {
   doTest("Pickling", PicklingConverter)
   doTest("BooPickle", BoopickleConverter)
   doTest("Chill", ChillConverter)
+  doTest("MsgpackMacros", MsgpackMacrosConverter)
 
   "ScalaPB and Java Protobuf" should {
     Fragments.foreach(TestData.sites) { case (name, site) =>

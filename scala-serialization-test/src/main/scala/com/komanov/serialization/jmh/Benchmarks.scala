@@ -246,3 +246,5 @@ class PicklingBenchmark extends BenchmarkBase(PicklingConverter)
 class BooPickleBenchmark extends BenchmarkBase(BoopickleConverter)
 
 class ChillBenchmark extends BenchmarkBase(ChillConverter)
+
+class MsgpackMacrosBenchmark extends BenchmarkBase(MsgpackMacrosConverter)
