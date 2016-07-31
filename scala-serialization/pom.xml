@@ -14,6 +14,14 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
+    <repositories>
+        <repository>
+            <id>bintrayvolthscalamacroserialization</id>
+            <name>bintray-volth-scala-macroserialization</name>
+            <url>https://dl.bintray.com/volth/scala-macroserialization/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.scala-lang</groupId>
@@ -88,11 +96,9 @@
             <version>4.7.0</version>
         </dependency>
         <dependency>
-            <groupId>ms.webmaster.macroserialization</groupId>
-            <artifactId>macroserialization</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/jar/serial_2.11.8.jar</systemPath>
+            <groupId>ms.webmaster</groupId>
+            <artifactId>macroserialization_2.11</artifactId>
+            <version>0.0.7</version>
         </dependency>
         <!-- test -->
 

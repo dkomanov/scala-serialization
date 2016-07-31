@@ -12,7 +12,7 @@ object Converters {
     "Pickling" -> PicklingConverter,
     "BooPickle" -> BoopickleConverter,
     "Chill" -> ChillConverter,
-    "Msgpack" -> MsgpackConverter
+    "MsgpackMacros" -> MsgpackMacrosConverter
   )
 
 }
