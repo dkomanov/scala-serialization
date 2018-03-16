@@ -3,6 +3,7 @@ package com.komanov.serialization.converters
 object Converters {
 
   val all: Seq[(String, MyConverter)] = Seq(
+    "JsoniterScala" -> JsoniterScalaConverter,
     "JSON" -> JsonConverter,
     "ScalaPB" -> ScalaPbConverter,
     "Java PB" -> JavaPbConverter,

@@ -12,6 +12,7 @@ class SerializationTest extends SpecificationWithJUnit {
 
   sequential
 
+  doTest("JsoniterScala", JsoniterScalaConverter)
   doTest("JSON", JsonConverter)
   doTest("ScalaPB", ScalaPbConverter)
   doTest("Java Protobuf", JavaPbConverter)

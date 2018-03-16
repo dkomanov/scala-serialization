@@ -229,6 +229,8 @@ abstract class BenchmarkBase(converter: MyConverter) {
 
 }
 
+class JsoniterScalaBenchmark extends BenchmarkBase(JsoniterScalaConverter)
+
 class JsonBenchmark extends BenchmarkBase(JsonConverter)
 
 class ScalaPbBenchmark extends BenchmarkBase(ScalaPbConverter)
