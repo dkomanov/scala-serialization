@@ -8,6 +8,11 @@ function loadScalaSerializationChartsPage(rawList) {
             excludeFromMax: true
         },
         {
+            name: 'JsoniterScala',
+            color: '#00ff00',
+            excludeFromMax: false
+        },
+        {
             name: 'ScalaPb',
             color: '#ff0000',
             excludeFromMax: false
