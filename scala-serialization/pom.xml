@@ -31,6 +31,11 @@
             <version>2.6</version>
         </dependency>
         <dependency>
+            <groupId>com.evolutiongaming</groupId>
+            <artifactId>kryo-macros_2.11</artifactId>
+            <version>1.1.8</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.plokhotnyuk.jsoniter-scala</groupId>
             <artifactId>macros_2.11</artifactId>
             <version>0.21.3</version>

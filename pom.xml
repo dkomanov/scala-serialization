@@ -26,6 +26,11 @@
             <name>Scala-tools Maven2 Repository</name>
             <url>http://scala-tools.org/repo-releases</url>
         </repository>
+        <repository>
+            <id>bintray-evolutiongaming-maven</id>
+            <name>EvolutionGaming Bintray Repository</name>
+            <url>https://dl.bintray.com/evolutiongaming/maven</url>
+        </repository>
     </repositories>
 
     <pluginRepositories>
