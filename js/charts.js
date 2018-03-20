@@ -13,6 +13,11 @@ function loadScalaSerializationChartsPage(rawList) {
             excludeFromMax: false
         },
         {
+            name: 'KryoMacros',
+            color: '#00ffff',
+            excludeFromMax: false
+        },
+        {
             name: 'ScalaPb',
             color: '#ff0000',
             excludeFromMax: false
