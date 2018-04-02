@@ -5,7 +5,8 @@ object Converters {
   val all: Seq[(String, MyConverter)] = Seq(
     "KryoMacros" -> KryoMacrosConverter,
     "JsoniterScala" -> JsoniterScalaConverter,
-    "JSON" -> JsonConverter,
+    "Jackson CBOR" -> JacksonCborConverter,
+    "Jackson JSON" -> JacksonJsonConverter,
     "ScalaPB" -> ScalaPbConverter,
     "Java PB" -> JavaPbConverter,
     "Java Thrift" -> JavaThriftConverter,

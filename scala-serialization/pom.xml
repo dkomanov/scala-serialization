@@ -38,22 +38,27 @@
         <dependency>
             <groupId>com.github.plokhotnyuk.jsoniter-scala</groupId>
             <artifactId>macros_2.11</artifactId>
-            <version>0.21.3</version>
+            <version>0.22.2</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.9.4</version>
+            <version>2.9.5</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.9.4</version>
+            <version>2.9.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-cbor</artifactId>
+            <version>2.9.5</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_2.11</artifactId>
-            <version>2.9.4</version>
+            <version>2.9.5</version>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>

@@ -14,7 +14,8 @@ class SerializationTest extends SpecificationWithJUnit {
 
   doTest("KryoMacros", KryoMacrosConverter)
   doTest("JsoniterScala", JsoniterScalaConverter)
-  doTest("JSON", JsonConverter)
+  doTest("Jackson CBOR", JacksonCborConverter)
+  doTest("Jackson JSON", JacksonJsonConverter)
   doTest("ScalaPB", ScalaPbConverter)
   doTest("Java Protobuf", JavaPbConverter)
   doTest("Java Thrift", JavaThriftConverter)

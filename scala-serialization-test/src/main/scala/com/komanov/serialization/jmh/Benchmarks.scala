@@ -233,7 +233,9 @@ class KryoMacrosBenchmark extends BenchmarkBase(KryoMacrosConverter)
 
 class JsoniterScalaBenchmark extends BenchmarkBase(JsoniterScalaConverter)
 
-class JsonBenchmark extends BenchmarkBase(JsonConverter)
+class JacksonCborBenchmark extends BenchmarkBase(JacksonCborConverter)
+
+class JacksonJsonBenchmark extends BenchmarkBase(JacksonJsonConverter)
 
 class ScalaPbBenchmark extends BenchmarkBase(ScalaPbConverter)
 
