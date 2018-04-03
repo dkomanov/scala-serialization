@@ -3,8 +3,13 @@ function loadScalaSerializationChartsPage(rawList) {
     // ordered according to view
     var Libraries = [
         {
-            name: 'Json',
+            name: 'JacksonJson',
             color: '#f4cccc',
+            excludeFromMax: true
+        },
+        {
+            name: 'JacksonCbor',
+            color: '#f4ccf4',
             excludeFromMax: true
         },
         {
