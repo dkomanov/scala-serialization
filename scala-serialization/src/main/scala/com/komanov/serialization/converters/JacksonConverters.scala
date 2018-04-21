@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.Module.SetupContext
 import com.fasterxml.jackson.databind._
 import com.fasterxml.jackson.databind.module.{SimpleDeserializers, SimpleSerializers}
 import com.fasterxml.jackson.dataformat.cbor.{CBORFactory, CBORGenerator}
+import com.fasterxml.jackson.dataformat.smile.SmileFactory
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.komanov.serialization.domain.{Site, SiteEvent}
 
@@ -14,6 +15,8 @@ import com.komanov.serialization.domain.{Site, SiteEvent}
 object JacksonJsonConverter extends JacksonConverter(new JsonFactory())
 
 object JacksonCborConverter extends JacksonConverter(new CBORFactory().disable(CBORGenerator.Feature.WRITE_MINIMAL_INTS))
+
+object JacksonSmileConverter extends JacksonConverter(new SmileFactory())
 
 abstract class JacksonConverter(jsonFactory: JsonFactory) extends MyConverter {
   private object InstantModule extends Module {

@@ -235,6 +235,8 @@ class JsoniterScalaBenchmark extends BenchmarkBase(JsoniterScalaConverter)
 
 class JacksonCborBenchmark extends BenchmarkBase(JacksonCborConverter)
 
+class JacksonSmileBenchmark extends BenchmarkBase(JacksonSmileConverter)
+
 class JacksonJsonBenchmark extends BenchmarkBase(JacksonJsonConverter)
 
 class ScalaPbBenchmark extends BenchmarkBase(ScalaPbConverter)

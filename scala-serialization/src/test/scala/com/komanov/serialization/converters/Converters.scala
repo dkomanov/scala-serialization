@@ -7,6 +7,7 @@ object Converters {
     "JsoniterScala" -> JsoniterScalaConverter,
     "Jackson CBOR" -> JacksonCborConverter,
     "Jackson JSON" -> JacksonJsonConverter,
+    "Jackson Smile" -> JacksonSmileConverter,
     "ScalaPB" -> ScalaPbConverter,
     "Java PB" -> JavaPbConverter,
     "Java Thrift" -> JavaThriftConverter,

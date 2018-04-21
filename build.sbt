@@ -30,6 +30,7 @@ lazy val `scala-serialization` = project
       "com.fasterxml.jackson.core" % "jackson-databind" % "2.9.5",
       "com.fasterxml.jackson.core" % "jackson-core" % "2.9.5",
       "com.fasterxml.jackson.dataformat" % "jackson-dataformat-cbor" % "2.9.5",
+      "com.fasterxml.jackson.dataformat" % "jackson-dataformat-smile" % "2.9.5",
       "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.9.5",
       "com.google.protobuf" % "protobuf-java" % "3.0.0",
       "com.trueaccord.scalapb" %% "scalapb-runtime" % "0.5.45",
