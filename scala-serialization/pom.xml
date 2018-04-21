@@ -18,43 +18,62 @@
         <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
-            <version>2.11.7</version>
+            <version>2.11.12</version>
         </dependency>
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>util-core_2.11</artifactId>
-            <version>6.34.0</version>
+            <version>18.3.0</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>2.6</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.evolutiongaming</groupId>
+            <artifactId>kryo-macros_2.11</artifactId>
+            <version>1.1.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.plokhotnyuk.jsoniter-scala</groupId>
+            <artifactId>macros_2.11</artifactId>
+            <version>0.22.2</version>
+        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.7.3</version>
+            <version>2.9.5</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.7.3</version>
+            <version>2.9.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-cbor</artifactId>
+            <version>2.9.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-smile</artifactId>
+            <version>2.9.5</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-scala_2.11</artifactId>
-            <version>2.7.3</version>
+            <version>2.9.5</version>
         </dependency>
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
-            <version>3.0.0-beta-2</version>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.trueaccord.scalapb</groupId>
             <artifactId>scalapb-runtime_2.11</artifactId>
-            <version>0.5.31</version>
+            <version>0.5.45</version>
         </dependency>
         <dependency>
             <groupId>org.scala-lang.modules</groupId>
@@ -62,19 +81,19 @@
             <version>0.11.0-M2</version>
         </dependency>
         <dependency>
-            <groupId>me.chrons</groupId>
+            <groupId>io.suzaku</groupId>
             <artifactId>boopickle_2.11</artifactId>
-            <version>1.2.4</version>
+            <version>1.2.6</version>
         </dependency>
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>chill_2.11</artifactId>
-            <version>0.8.0</version>
+            <version>0.9.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.thrift</groupId>
             <artifactId>libthrift</artifactId>
-            <version>0.9.1</version>
+            <version>0.11.0</version>
         </dependency>
         <dependency>
             <!-- for thrift -->
@@ -85,7 +104,7 @@
         <dependency>
             <groupId>com.twitter</groupId>
             <artifactId>scrooge-core_2.11</artifactId>
-            <version>4.7.0</version>
+            <version>18.3.0</version>
         </dependency>
 
         <!-- test -->

@@ -14,7 +14,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jmh.version>1.12</jmh.version>
+        <jmh.version>1.20</jmh.version>
         <jmh.generator>default</jmh.generator>
         <javac.target>1.8</javac.target>
         <uberjar.name>benchmarks</uberjar.name>
@@ -25,6 +25,11 @@
             <id>scala-tools.org</id>
             <name>Scala-tools Maven2 Repository</name>
             <url>http://scala-tools.org/repo-releases</url>
+        </repository>
+        <repository>
+            <id>bintray-evolutiongaming-maven</id>
+            <name>EvolutionGaming Bintray Repository</name>
+            <url>https://dl.bintray.com/evolutiongaming/maven</url>
         </repository>
     </repositories>
 

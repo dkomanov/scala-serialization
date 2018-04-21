@@ -6,7 +6,7 @@ import com.komanov.serialization.converters._
 import com.komanov.serialization.domain.{EventProcessor, Site, SiteEvent}
 import org.openjdk.jmh.annotations._
 
-@State(Scope.Benchmark)
+@State(Scope.Thread) // Kryo modifies bytes during parsing, see: https://github.com/EsotericSoftware/kryo#threading
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Fork(value = 1, jvmArgs = Array("-Xmx2G"))
@@ -229,7 +229,15 @@ abstract class BenchmarkBase(converter: MyConverter) {
 
 }
 
-class JsonBenchmark extends BenchmarkBase(JsonConverter)
+class KryoMacrosBenchmark extends BenchmarkBase(KryoMacrosConverter)
+
+class JsoniterScalaBenchmark extends BenchmarkBase(JsoniterScalaConverter)
+
+class JacksonCborBenchmark extends BenchmarkBase(JacksonCborConverter)
+
+class JacksonSmileBenchmark extends BenchmarkBase(JacksonSmileConverter)
+
+class JacksonJsonBenchmark extends BenchmarkBase(JacksonJsonConverter)
 
 class ScalaPbBenchmark extends BenchmarkBase(ScalaPbConverter)
 
