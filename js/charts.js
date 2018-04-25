@@ -13,6 +13,11 @@ function loadScalaSerializationChartsPage(rawList) {
             excludeFromMax: true
         },
         {
+            name: 'JacksonSmile',
+            color: '#f4f4cc',
+            excludeFromMax: true
+        },
+        {
             name: 'JsoniterScala',
             color: '#00ff00',
             excludeFromMax: false
